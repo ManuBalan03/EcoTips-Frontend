@@ -1,0 +1,115 @@
+*{
+    font-family: "Inter", sans-serif;
+}
+.Navegacion{
+    display: flex;
+    justify-content:space-between;
+    padding: 1.5% 3%;
+    background-color: #F5F7FA;
+    color: rgb(0, 0, 0);
+    position:sticky;   
+    align-items: center;
+    font-weight: 500;
+}
+
+.Logo{
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+}
+.logoimg{
+    width: 100px;
+}
+
+.TextLogo{
+    font-size: 20px;
+    font-weight: 600;
+}
+
+ul{
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    gap: 1rem;
+}
+
+.InicioSesion{
+    color: #45DF88;
+}
+.InicioSesion:hover{
+    color: #03A688;
+}
+.Registro{
+    background-color: #45DF88;
+    border-radius: 5px;
+    padding: 10% 10% ;
+    color: #F5F7FA ;
+}
+.Registro:hover{
+    background-color: #03A688;
+ }
+
+ .Contenido {
+    display: flex;
+     /* Opcional: centra el contenido en horizontal */
+    align-items: center;     /* Centra el contenido en vertical */
+    gap: 5%;
+}
+
+span{
+    color: #45DF88;  
+}
+
+.Texto{
+    flex: 1;   
+    display: flex;
+    font-weight: 500;
+    margin-right: 0%;
+    padding: 5%;
+    justify-content: center;
+    align-items: center; 
+    flex-direction: column;            
+    height: 100%;
+}
+
+p{
+    text-align: justify;
+    font-size: 25px;
+    line-height: 1.6;
+    margin-bottom: 5%;
+}
+
+.Empieza-ahora{
+    justify-self: left;
+    padding: 1% 10%;
+    background-color: #45DF88; 
+    border-radius: 10px;
+    color: aliceblue;   
+
+
+    
+}
+.Empieza-ahora:hover{
+   background-color: #03A688;
+}
+
+.ImagenLP{
+
+    flex: 1;                 
+    padding: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+}
+
+.ImagenLP img {
+    max-width: 100%; /* Que la imagen no se pase del ancho disponible */
+    height: auto;
+    border-radius: 10px; /* Opcional: bordes redondeados */
+}
+Link{
+    text-decoration: none;
+    background-color: aqua;
+}
