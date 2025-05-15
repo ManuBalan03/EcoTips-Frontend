@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { obtenerUsuarios } from '../../api/services/usersexample.ts';
+import { obtenerUsuarios } from '../../api/services/UserService.ts';
 import { Usuario } from '../../api/types/userexample.ts';
 // Definir un tipo de Usuario si no lo tienes ya
 

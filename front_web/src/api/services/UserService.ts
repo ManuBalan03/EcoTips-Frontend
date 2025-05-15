@@ -1,9 +1,9 @@
 import api from "../axios";
 import { Usuario } from "../types/userexample";
 
-// Definimos una interfaz para un usuario
 
-// Ejemplo de función para obtener usuarios
+export const registerUser = (data: any) => api.post("/auth/register", data);
+export const loginUser = (data: any) => api.post("/auth/login", data);
 
 // Ejemplo de función para crear un usuario
 export const crearUsuario = async (userData: Usuario): Promise<Usuario> => {
