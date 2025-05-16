@@ -9,6 +9,7 @@ import Signup from './routes/Signup';
 import LandingPage from './components/pages/LandingPage.tsx';
 // import ProtectedRoute from './routes/ProtectedRoute.tsx';
 
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -22,6 +23,8 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <Signup />,
   },
+  
+  
   
   
 ]);

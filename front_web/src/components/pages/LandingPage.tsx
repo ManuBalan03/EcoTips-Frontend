@@ -10,10 +10,10 @@ export const LandingPage = ({children}: DefaultLayoutProps) => {
   return (
     <div>
       <nav className='Navegacion'>
-        <div className='Logo'> <img className='logoimg' src={img} alt='logo'/> <a className='TextLogo'> <Link to="/">EcoTips</Link></a></div>
+        <div className='Logo'> <img className='logoimg' src={img} width="50" height="80" alt='logo'/><Link to="/" className='TextLogo'>EcoTips</Link></div>
           <ul>
-            <li><a className='InicioSesion' href=" " ><Link to="/login">Iniciar Sesión</Link></a></li>
-            <li><a className='Registro' href=" "><Link to="/signup">Registrarse</Link> </a></li>
+            <li><Link to="/login" className='InicioSesion'>Iniciar Sesión</Link></li>
+            <li><Link to="/signup" className='Registro'>Registrarse</Link> </li>
           </ul>
       </nav>
       <main> {children} </main>

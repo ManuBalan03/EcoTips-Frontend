@@ -25,6 +25,7 @@
 .TextLogo{
     font-size: 20px;
     font-weight: 600;
+    color: #000;
 }
 
 ul{
@@ -40,7 +41,7 @@ ul{
 .InicioSesion:hover{
     color: #03A688;
 }
-.Registro{
+.Registro {
     background-color: #45DF88;
     border-radius: 5px;
     padding: 10% 10% ;
@@ -113,3 +114,6 @@ Link{
     text-decoration: none;
     background-color: aqua;
 }
+a {
+    text-decoration: none;
+  }
