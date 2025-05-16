@@ -3,6 +3,8 @@ import './LandingPage.css'
 import { Link } from "react-router-dom";
 
 import img from "../../assets/img1.png";
+import PostCard from '../home/PostCard';
+
 interface DefaultLayoutProps {
   children: React.ReactNode;
 }
@@ -36,6 +38,7 @@ export const LandingPage = ({children}: DefaultLayoutProps) => {
           <div className='ImagenLP'><img src={img} alt='imagen'/> </div>
         </div>
       </section>
+      <PostCard userName='Jazmin Dzib' text='Tip de reciclaje: ¡No tires esas botellas de plástico! Puedes transformarlas en lindas macetas para tus plantas. Solo corta la parte superior, haz unos agujeros en la base para el drenaje, decóralas a tu gusto, ¡y listo! Es una forma económica y ecológica de darle vida a tus espacios. ♻️🌼 #Recicla #HazloTúMismo #MacetasSustentables' />
     </div>
     
 
