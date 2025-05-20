@@ -1,9 +1,18 @@
+// api/services/UserService.ts
 import api from "../axios";
-import { Usuario } from "../types/userexample";
-
+import { Usuario, AuthResponse, LoginDTO } from "../types/userexample";
 
 export const registerUser = (data: any) => api.post("/auth/register", data);
-export const loginUser = (data: any) => api.post("/auth/login", data);
+
+export const loginUser = async (loginData: LoginDTO): Promise<AuthResponse> => {
+  try {
+    const response = await api.post("/auth/login", loginData);
+    return response.data;
+  } catch (error) {
+    console.error("Error en login:", error);
+    throw error;
+  }
+};
 
 // Ejemplo de función para crear un usuario
 export const crearUsuario = async (userData: Usuario): Promise<Usuario> => {
@@ -16,7 +25,7 @@ export const crearUsuario = async (userData: Usuario): Promise<Usuario> => {
   }
 };
 
-// usersexample.ts
+// Obtener todos los usuarios
 export const obtenerUsuarios = async (): Promise<Usuario[]> => {
   try {
     const response = await api.get("/usuarios");
@@ -35,6 +44,16 @@ export const obtenerUsuarios = async (): Promise<Usuario[]> => {
   }
 };
 
+// Obtener un usuario por ID
+export const obtenerUsuarioPorId = async (userId: number): Promise<Usuario> => {
+  try {
+    const response = await api.get(`/usuarios/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error obteniendo datos del usuario:", error);
+    throw error;
+  }
+};
 
 // Ejemplo de función para actualizar un usuario
 export const actualizarUsuario = async (id: number, userData: Usuario): Promise<Usuario> => {
@@ -57,3 +76,97 @@ export const eliminarUsuario = async (id: number): Promise<void> => {
     throw error;
   }
 };
+
+
+
+
+
+
+
+
+
+// // api/services/UserService.ts
+// import api from "../axios";
+
+// export interface EcoTip {
+//   id: number;
+//   nombre: string;
+//   email: string;
+//   puntos_totales: number;
+//   foto_perfil: string;
+// }
+
+// export interface LoginResponse {
+//   token: string;
+//   user: EcoTip;
+// }
+
+
+// export const registerUser = (data: any) => api.post("/auth/register", data);
+  
+
+
+// export interface EcoTip {
+//   id: number;
+//   nombre: string;
+//   email: string;
+//   puntos_totales: number;
+//   foto_perfil: string;
+//   // Añade otros campos que devuelva Spring
+//   roles?: string[];
+//   enabled?: boolean;
+// }
+
+// export interface LoginResponse {
+//   token: string;
+//   user: EcoTip;
+// }
+
+// export const loginUser = async (credentials: {
+//   email: string;
+//   password: string;
+// }): Promise<LoginResponse> => {
+//   try {
+//     const response = await api.post("/auth/login", credentials);
+    
+//     // Asegúrate de que esto coincida con la respuesta de Spring
+//     return {
+//       token: response.data.token,
+//       user: {
+//         id: response.data.user.id,
+//         nombre: response.data.user.nombre || response.data.user.username,
+//         email: response.data.user.email,
+//         puntos_totales: response.data.user.puntos_totales || 0,
+//         foto_perfil: response.data.user.foto_perfil || "default.jpg",
+//         // Mapea otros campos de Spring
+//         roles: response.data.user.roles || [],
+//         enabled: response.data.user.enabled || false
+//       }
+//     };
+//   } catch (error) {
+//     console.error("Error en login:", error);
+//     throw error;
+//   }
+// };
+
+// // Servicio para obtener los datos del usuario
+// export const obtenerDatosUsuario = async (userId: number): Promise<EcoTip> => {
+//   try {
+//     const response = await api.get(`/api/usuarios/${userId}`);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error obteniendo datos del usuario:", error);
+//     throw error;
+//   }
+// };
+
+
+// export const obtenerEcoTips = async (): Promise<EcoTip[]> => {
+//   try {
+//     const response = await api.get("/api/ecotips");
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error obteniendo ecotips:", error);
+//     throw error;
+//   }
+// };

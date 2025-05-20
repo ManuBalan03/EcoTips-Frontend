@@ -1,12 +1,13 @@
 import React from 'react'
-import './postCard.css'
+import '../home/PostCard.css';
 import commentIcon from '../../assets/icons/comentario.png'
 
 
-interface PostData{
+export interface PostData {
   userName: string;
   text: string;
-  /*imgPost: string ;*/
+  commentCount?: number;
+  /* imgPost?: string; */
 }
 
 const PostCard: React.FC<PostData> = ({userName , text}) => {

@@ -4,11 +4,12 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from './routes/Login.tsx';
 import Signup from './routes/Signup';
+import Home from './routes/Home';
 // import Dashboard from './routes/Dashboard.tsx';
 // import App from './App.tsx';                                                      
 import LandingPage from './components/pages/LandingPage.tsx';
 // import ProtectedRoute from './routes/ProtectedRoute.tsx';
-
+import { AuthProvider } from './api/AuthContext'; // Importa el AuthProvider
 
 const router = createBrowserRouter([
   {
@@ -23,15 +24,16 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <Signup />,
   },
-  
-  
-  
-  
+  {
+    path: "/Home",
+    element: <Home />,
+  },
 ]);
-
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router = {router}/>
+    <AuthProvider> {/* Añade el AuthProvider aquí */}
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>,
 )

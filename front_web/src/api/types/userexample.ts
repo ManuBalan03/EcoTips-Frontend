@@ -1,7 +1,18 @@
-// src/types/userexample.ts
 export interface Usuario {
-  id: number;
+  idUsuario?: number;
   nombre: string;
   email: string;
-  rol: string;
+  fotoPerfil?: string;
+  puntosTotales?: number;
+  nivel:string;
+}
+
+export interface AuthResponse {
+  token: string;
+  user: Usuario;
+}
+
+export interface LoginDTO {
+  email: string;
+  password: string;
 }

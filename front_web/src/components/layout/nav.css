@@ -1,0 +1,58 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #f4f4f4;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.Logo {
+  display: flex;
+  align-items: center;
+}
+
+.logoimg {
+  height: 100px;
+  margin-right: 10px;
+}
+.menu-icon{
+  width: 200px;
+}
+
+.TextLogo a {
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 6px 10px;
+  border-radius: 25px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  width: 250px;
+  transition: box-shadow 0.3s ease;
+}
+
+.search-bar:focus-within {
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.3);
+}
+
+.search-icon {
+  font-size: 18px;
+  color: #888;
+  margin-right: 8px;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  width: 100%;
+  color: #333;
+  background: transparent;
+}
