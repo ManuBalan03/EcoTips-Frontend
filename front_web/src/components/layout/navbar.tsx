@@ -13,20 +13,30 @@ function DefaultLayout({children}: DefaultLayoutProps) {
         <>
             <header>
                 <nav className="navbar">
-                  <div className='Logo'> <img className='logoimg' src={img} alt='logo'/> <a className='TextLogo'> <Link to="/"> </Link></a></div>
-                  <div className="search-bar">
-                    <FiSearch className="search-icon" />
-                    <input type="text" placeholder="Busqueda..." />
-                  </div>
-                  <div>
-                    <FiMenu className="menu-icon" />
-                  </div>
+                    <div className="logo-container">
+                        <span className="logo-text"><a className='TextLogo'> <Link to="/"><img className='logoimg' src={img} alt='logo'/></Link></a></span>
+                    </div>
+                    <div className="search-container">
+                        <div className="search-bar">
+                            <FiSearch className="search-icon" />
+                            <input 
+                                type="text" 
+                                placeholder="Busqueda..." 
+                                className="search-input"
+                            />
+                        </div>
+                    </div>
+                    <div className="menu-container">
+                        <FiMenu className="menu-icon" />
+                    </div>
                 </nav>
             </header>
 
-            <main> {children} </main>
-            </>
-
+            <main className="main-page">
+                {children}
+            </main>
+        </>
     );
 }
+
 export default DefaultLayout;

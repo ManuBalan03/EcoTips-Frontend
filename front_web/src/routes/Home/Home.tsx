@@ -1,8 +1,8 @@
 import React from "react";
-import { useAuth } from "../api/AuthContext";
-import DefaultLayout from "../components/layout/navbar";
-import UserCard from "../components/home/userinfo";
-import EcoTipsPage from "../components/home/EcotipCard";
+import { useAuth } from "../../api/AuthContext";
+import DefaultLayout from "../../components/layout/navbar";
+import UserCard from "../../components/home/userinfo";
+import EcoTipsPage from "../../components/home/EcotipCard";
 import "./Home.css";
 
 function Home() {

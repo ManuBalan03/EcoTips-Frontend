@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from './routes/Login.tsx';
 import Signup from './routes/Signup';
-import Home from './routes/Home';
+import Home from './routes/Home/Home';
 // import Dashboard from './routes/Dashboard.tsx';
 // import App from './App.tsx';                                                      
 import LandingPage from './components/pages/LandingPage.tsx';

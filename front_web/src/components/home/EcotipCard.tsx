@@ -1,8 +1,7 @@
-import { useState } from "react";
-import { crearPublicacion, PublicacionDTO } from "../../api/services/PublicacionesService";
+import { useState, useEffect } from "react";
+import { crearPublicacion, obtenerTodasLasPublicaciones,PublicacionDTO } from "../../api/services/PublicacionesService";
 import { useAuth } from "../../api/AuthContext";
 import '../home/EcoTipCard.css';
-
 const EcoTipsPage = () => {
   const { user, token } = useAuth();
   const [showModal, setShowModal] = useState(false);
@@ -10,6 +9,29 @@ const EcoTipsPage = () => {
   const [contenido, setContenido] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [tips, setTips] = useState<PublicacionDTO[]>([]);
+  
+  
+
+useEffect(() => {
+  const cargarPublicaciones = async () => {
+    try {
+      if (!token) {
+        console.log("No hay token disponible");
+        return;
+      }
+      
+      
+      const publicaciones = await obtenerTodasLasPublicaciones(token);
+      
+     
+      setTips(publicaciones);
+    } catch (error) {
+      console.error("Error al obtener publicaciones:", error);
+    }
+  };
+
+  cargarPublicaciones();
+}, [token]);
 
   const handleAddTip = async () => {
     if (contenido.trim() && user && token) {
@@ -129,32 +151,39 @@ const EcoTipsPage = () => {
           </div>
         </div>
       )}
+<h4>Tips del dia</h4>
+<hr></hr>
+<div className="tips-list">
+  {Array.isArray(tips) ? (
+    tips.map((tip) => (
+      <div key={tip.id} className="tip-card">
+        <h4>{tip.titulo}</h4>
 
-      <div className="tips-list">
-        {tips.map((tip) => (
-          <div key={tip.id} className="tip-card">
-            <h4>{tip.titulo}</h4>
-            
-            {(tip.contenido) ? (
-              <img src={tip.contenido} alt="EcoTip" className="tip-image" />
-            ) : (
-              <p className="tip-content">{tip.contenido}</p>
-            )}
-            
-            {tip.descripcion && (
-              <div className="tags-container">
-                {tip.descripcion.split(',').map((tag, index) => (
-                  <span key={index} className="tag">{tag.trim()}</span>
-                ))}
-              </div>
-            )}
+        {tip.contenido && tip.contenido.startsWith("http") ? (
+          <img src={tip.contenido} alt="EcoTip" className="tip-image" />
+        ) : (
+          <p className="tip-content">{tip.contenido}</p>
+        )}
 
-            <small className="author-info">
-              Publicado por: {tip.nombreAutor || user?.nombre}
-            </small>
+        {tip.descripcion && (
+          <div className="tags-container">
+            {tip.descripcion.split(',').map((tag, index) => (
+              <span key={index} className="tag">{tag.trim()}</span>
+            ))}
           </div>
-        ))}
+        )}
+
+        <small className="author-info">
+          Publicado por: {tip.nombreAutor || user?.nombre}
+        </small>
       </div>
+    ))
+  ) : (
+    <p>No se encontraron publicaciones.</p>
+  )}
+</div>
+
+
     </div>
   );
 };

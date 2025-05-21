@@ -10,7 +10,7 @@ function DefaultLayout({children}: DefaultLayoutProps) {
         <>
             <header>
                 <nav className='Navegacion'>
-                 <div className='Logo'> <img className='logoimg' src={img} alt='logo'/> <a className='TextLogo'> <Link to="/">EcoTips </Link></a></div>
+                 <div className='Logo'>  <a className='TextLogo'> <Link to="/"><img className='logoimg' src={img} alt='logo'/> </Link></a></div>
                     <ul>
                         <li> <a className='InicioSesion' href="" ><Link to="/login">Iniciar sesión</Link></a> </li>
                         <li><a className='Registro' href=" "><Link to="/signup">Registrarse</Link></a></li>

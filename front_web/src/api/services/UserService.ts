@@ -1,8 +1,26 @@
 // api/services/UserService.ts
 import api from "../axios";
+import axios from 'axios';
 import { Usuario, AuthResponse, LoginDTO } from "../types/userexample";
 
-export const registerUser = (data: any) => api.post("/auth/register", data);
+
+export const registerUser = async (data: any) => {
+  try {
+    const response = await api.post("/auth/register", data);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {  // <-- Usamos axios directamente
+      if (error.response) {
+        const errorMessage = error.response.data?.message || error.response.data;
+        throw new Error(errorMessage);
+      } else {
+        throw new Error('Error de conexión. Por favor intenta nuevamente.');
+      }
+    }
+    throw error;
+  }
+};
+
 
 export const loginUser = async (loginData: LoginDTO): Promise<AuthResponse> => {
   try {
