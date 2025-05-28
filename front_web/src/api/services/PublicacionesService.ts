@@ -9,7 +9,7 @@ export interface PublicacionDTO {
   fechaCreacion?: string;
   nombreAutor ?:string;
 }
-const BASE_URL = 'http://localhost:8081/api/publicaciones'; // cambia al host de tu microservicio
+const BASE_URL = 'http://localhost:8082/api/publicaciones'; // cambia al host de tu microservicio
 
 export const crearPublicacion = async (
   publicacion: PublicacionDTO,
