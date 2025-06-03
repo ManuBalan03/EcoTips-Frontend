@@ -63,7 +63,10 @@
   object-fit:cover;
   width:90%;
   max-height: 600px;
+  margin-left: 5%;
+  margin-top: 10px;
 }
+
 /* Formulario */
 .form-group {
   display: flex;

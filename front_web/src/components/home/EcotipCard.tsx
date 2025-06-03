@@ -159,7 +159,8 @@ useEffect(() => {
   {Array.isArray(tips) ? (
     tips.map((tip) => (
       <div key={tip.id} className="tip-card">
-        <h4>{tip.titulo}</h4>
+       
+          <h4>{tip.titulo}</h4>
 
         {tip.contenido && tip.contenido.startsWith("http") ? (
           <img src={tip.contenido} alt="EcoTip" className="tip-image" />

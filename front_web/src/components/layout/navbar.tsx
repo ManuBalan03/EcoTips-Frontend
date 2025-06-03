@@ -13,8 +13,9 @@ function DefaultLayout({children}: DefaultLayoutProps) {
         <>
             <header>
                 <nav className="navbar">
-                    <div className="logo-container">
-                        <span className="logo-text"><a className='TextLogo'> <Link to="/"><img className='logoimg' src={img} alt='logo'/></Link></a></span>
+                    <div className="logo-container">                      
+                        <img className='logoimg' src={img} alt='logo'/> 
+                        <span className='TextLogo'><Link to="/" >EcoTips</Link></span>
                     </div>
                     <div className="search-container">
                         <div className="search-bar">
