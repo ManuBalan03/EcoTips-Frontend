@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { crearPublicacion, obtenerTodasLasPublicaciones,PublicacionDTO } from "../../api/services/PublicacionesService";
 import { useAuth } from "../../api/AuthContext";
+import CommentSection from "../common/CommentComponent";
 import '../home/EcoTipCard.css';
 const EcoTipsPage = () => {
   const { user, token } = useAuth();
@@ -9,6 +10,7 @@ const EcoTipsPage = () => {
   const [contenido, setContenido] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [tips, setTips] = useState<PublicacionDTO[]>([]);
+  
   
   
 
@@ -176,6 +178,15 @@ useEffect(() => {
         <small className="author-info">
           Publicado por: {tip.nombreAutor || user?.nombre}
         </small>
+
+                      {tip.id && (
+                <CommentSection 
+                  idPublicacion={tip.id}
+                  onCommentAdded={() => console.log("Comentario agregado")}
+                  onReactionUpdated={() => console.log("Reacción actualizada")}
+                />
+              )}
+
       </div>
     ))
   ) : (
