@@ -113,7 +113,8 @@ const CommentSection = ({
         idPublicacion,
         idUsuario: user.id,
         contenido: newComment.trim(),
-        nombreAutor: user.nombre
+        nombreAutor: user.nombre,
+        fotoPerfil: user.fotoPerfil
       }, token);
       
       console.log("Comentario creado exitosamente:", comentario);
@@ -283,8 +284,17 @@ const CommentSection = ({
               {comments.map(comment => (
                 <div key={comment.idcomentario || Math.random()} className="comment-item">
                   <div className="comment-avatar">
-                    {comment.nombreAutor?.charAt(0).toUpperCase() || 'U'}
+                    {comment.fotoPerfil ? (
+                      <img
+                        src={comment.fotoPerfil}
+                        alt={comment.nombreAutor || 'Avatar'}
+                        className="avatar-image"
+                      />
+                    ) : (
+                      comment.nombreAutor?.charAt(0).toUpperCase() || 'U'
+                    )}
                   </div>
+
                   <div className="comment-content">
                     <div className="comment-header">
                       <span className="comment-author">

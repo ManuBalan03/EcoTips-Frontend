@@ -25,6 +25,7 @@ export interface ComentarioCreateDTO {
   idUsuario: number;
   contenido: string;
   nombreAutor?: string;
+  fotoPerfil?: string;
 }
 
 // Mantén ComentarioDTO completo para las respuestas
