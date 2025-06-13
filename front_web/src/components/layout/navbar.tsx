@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import img from "../../assets/img1.png";
 import { FiSearch } from "react-icons/fi";
 import { FiMenu } from "react-icons/fi";
+import { FiBell } from "react-icons/fi";
 
 interface DefaultLayoutProps {
     children: React.ReactNode;
@@ -28,8 +29,12 @@ function DefaultLayout({children}: DefaultLayoutProps) {
                         </div>
                     </div>
                     <div className="menu-container">
+                        <Link to="/notifications" className="notification-icon">
+                            <FiBell />
+                        </Link>
                         <FiMenu className="menu-icon" />
                     </div>
+
                 </nav>
             </header>
 

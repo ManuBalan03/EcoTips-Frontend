@@ -316,7 +316,15 @@ const CommentSection = ({
           {/* Formulario para nuevo comentario */}
           <form onSubmit={handleSubmitComment} className="comment-form">
             <div className="comment-avatar">
-              {user?.nombre?.charAt(0).toUpperCase() || 'T'}
+                             {user?.fotoPerfil ? (
+                      <img
+                        src={user?.fotoPerfil}
+                        alt="contenido"
+                        
+                      />
+                    ) : (
+                      user?.nombre?.charAt(0).toUpperCase() || 'U'
+                    )}
             </div>
             <input
               type="text"
