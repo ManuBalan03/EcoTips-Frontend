@@ -3,12 +3,19 @@ import { Link } from "react-router-dom";
 import img from "../../assets/img1.png";
 import { FiSearch } from "react-icons/fi";
 import { FiMenu } from "react-icons/fi";
+import { useState } from 'react';
+import SideNarvbar from './SideNarvbar';
 
 interface DefaultLayoutProps {
     children: React.ReactNode;
 }
 
 function DefaultLayout({children}: DefaultLayoutProps) {
+    const [activeNarvbar, setActiveNarvbar] = useState(false);
+
+  function handleNarvbar() {
+    setActiveNarvbar(!activeNarvbar);
+  }
     return (
         <>
             <header>
@@ -28,11 +35,11 @@ function DefaultLayout({children}: DefaultLayoutProps) {
                         </div>
                     </div>
                     <div className="menu-container">
-                        <FiMenu className="menu-icon" />
+                        <FiMenu className="menu-icon" onClick={handleNarvbar}/>
                     </div>
                 </nav>
             </header>
-
+            {activeNarvbar && <SideNarvbar />}
             <main className="main-page">
                 {children}
             </main>
