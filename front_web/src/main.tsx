@@ -5,7 +5,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from './routes/Login.tsx';
 import Signup from './routes/Signup';
 import Home from './routes/Home/Home';
-import Notifications from './routes/Home/Home2';
 // import Dashboard from './routes/Dashboard.tsx';
 // import App from './App.tsx';                                                      
 import LandingPage from './components/pages/LandingPage.tsx';
@@ -28,10 +27,6 @@ const router = createBrowserRouter([
   {
     path: "/Home",
     element: <Home />,
-  },
-  {
-    path: "/notifications",
-    element: <Notifications />,
   },
 ]);
 
