@@ -4,6 +4,11 @@ import img from "../../assets/img1.png";
 import { FiSearch } from "react-icons/fi";
 import { FiMenu } from "react-icons/fi";
 import { FiBell } from "react-icons/fi";
+import { useState } from 'react';
+import SideNarvbar from './SideNarvbar';
+
+
+
 
 interface DefaultLayoutProps {
     children: React.ReactNode;
@@ -33,13 +38,13 @@ function DefaultLayout({children}: DefaultLayoutProps) {
                             />
                         </div>
                     </div>
+                  
                     <div className="menu-container">
                         <Link to="/notifications" className="notification-icon">
                             <FiBell />
                         </Link>
-                        <FiMenu className="menu-icon" />
+                        <FiMenu className="menu-icon" onClick={handleNarvbar}/>
                     </div>
-
                 </nav>
             </header>
             {activeNarvbar && <SideNarvbar />}

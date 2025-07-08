@@ -1,17 +1,16 @@
 // services/NotificacionesService.ts
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8082/api/notificaciones';
+const BASE_URL = 'http://localhost:8080/api/notificaciones';
 
 export interface NotificationsDTO {
   id?: number;
-  titulo: string;
-  contenido: string;
+  tipo: string;
+  mensaje: string;
   idUsuario: number;
   idPublicacion?: number;
-  fechaCreacion?: string;
+  fechaEnvio?: string;
   leida?: boolean;
-  tipo?: string;
 }
 
 export const obtenerNotificacionesPorUsuario = async (idUsuario: number, token: string): Promise<NotificationsDTO[]> => {
@@ -29,16 +28,30 @@ export const obtenerNotificacionesPorUsuario = async (idUsuario: number, token: 
   }
 };
 
+// services/NotificacionesService.ts
 export const marcarComoLeida = async (idNotificacion: number, token: string): Promise<void> => {
   try {
-    await axios.patch(`${BASE_URL}/${idNotificacion}/leida`, {}, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      withCredentials: true
-    });
+    const response = await axios.patch(
+      `${BASE_URL}/${idNotificacion}/leida`, 
+      {}, // Body vacío para PATCH
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      }
+    );
+    
+    if (response.status !== 200) {
+      throw new Error('Error al marcar como leída');
+    }
   } catch (error) {
-    console.error('Error al marcar notificación como leída:', error);
-    throw error;
+    console.error('Error en marcarComoLeida:', error);
+    throw new Error(
+      axios.isAxiosError(error) 
+        ? error.response?.data?.message || 'Error en el servidor'
+        : 'Error al marcar como leída'
+    );
   }
 };

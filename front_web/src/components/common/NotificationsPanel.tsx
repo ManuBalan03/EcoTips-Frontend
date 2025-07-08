@@ -7,29 +7,46 @@ import {
   marcarComoLeida, 
   NotificationsDTO 
 } from '../../api/services/UserServices/NotificacionesService';
+import SolicitudesList from './SolicitudesExpert/SolicitudesList';
+import SolicitudDetail from './SolicitudesExpert/SolicitudDetail';
+import EvaluationList from './SolicitudesEvaluation/EvaluationList';
+import EvaluacionDetail from './SolicitudesEvaluation/EvaluationsDetail';
 import './NotificationsPanel.css';
+
+type ActiveTab = 'notificaciones' | 'solicitudes' | 'evaluaciones';
+type SolicitudesView = 'list' | 'detail';
 
 const NotificationsPanel: React.FC = () => {
   const { user, token } = useAuth();
   const [notificaciones, setNotificaciones] = useState<NotificationsDTO[]>([]);
-  const [activeTab, setActiveTab] = useState<'notificaciones' | 'solicitudes' | 'evaluaciones'>('notificaciones');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('notificaciones');
+  const [solicitudesView, setSolicitudesView] = useState<SolicitudesView>('list');
+  const [selectedSolicitud, setSelectedSolicitud] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(5);
   const navigate = useNavigate();
+  const [evaluacionesView, setEvaluacionesView] = useState<'list' | 'detail'>('list');
+  const [selectedEvaluacion, setSelectedEvaluacion] = useState<number | null>(null);
 
-  // Obtener notificaciones reales del endpoint
+  // Obtener notificaciones
   useEffect(() => {
-    if (!user?.id || !token) return;
+    if (!user?.id || !token || activeTab !== 'notificaciones') return;
+
+    const userId = Number(user.id);
+    if (isNaN(userId)) {
+      setError("ID de usuario inválido");
+      return;
+    }
 
     const cargarNotificaciones = async () => {
       setLoading(true);
       setError(null);
       
       try {
-        console.log(`Obteniendo notificaciones para usuario ${user.id}`);
-        const data = await obtenerNotificacionesPorUsuario(user.id, token);
+        const data = await obtenerNotificacionesPorUsuario(userId, token);
         setNotificaciones(data);
-        console.log("Notificaciones recibidas:", data);
+        setVisibleCount(5);
       } catch (err) {
         console.error("Error al cargar notificaciones:", err);
         setError("No se pudieron cargar las notificaciones");
@@ -39,62 +56,78 @@ const NotificationsPanel: React.FC = () => {
     };
 
     cargarNotificaciones();
-  }, [user, token]);
+  }, [user, token, activeTab]);
 
   const handleNotificationClick = async (notificacion: NotificationsDTO) => {
-    // Marcar como leída si no lo está
-    if (notificacion.id && !notificacion.leida) {
-      try {
+    if (!user?.id || !token || !notificacion.id) return;
+
+    try {
+      if (!notificacion.leida) {
         await marcarComoLeida(notificacion.id, token);
-        // Actualizar estado local
         setNotificaciones(prev => 
           prev.map(n => 
             n.id === notificacion.id ? { ...n, leida: true } : n
           )
         );
-      } catch (error) {
-        console.error("Error al marcar como leída:", error);
       }
+      
+      if (notificacion.tipo === 'Solicitud Publicacion' && notificacion.idPublicacion) {
+        setActiveTab('solicitudes');
+        setSelectedSolicitud(notificacion.idPublicacion);
+        setSolicitudesView('detail');
+      } else if (notificacion.idPublicacion) {
+        navigate(`/publicacion/${notificacion.idPublicacion}`);
+      }
+    } catch (error) {
+      console.error("Error al manejar la notificación:", error);
     }
-    
-    // Navegar según el tipo de notificación
-    if (notificacion.idPublicacion) {
-      navigate(`/publicacion/${notificacion.idPublicacion}`);
-    }
+  };
+
+  const handleBackToList = () => {
+    setSolicitudesView('list');
+    setSelectedSolicitud(null);
   };
 
   const getNotificationIcon = (tipo?: string) => {
     switch(tipo) {
       case 'aceptada': return '✅';
       case 'rechazada': return '❌';
-      case 'comentario': return '💬';
-      case 'reaccion': return '❤️';
-      case 'revision': return '🔍';
-      case 'proceso': return '⏳';
+      case 'Comentario': return '💬';
+      case 'Reaccion': return '❤️';
+      case 'Solicitud Publicacion': return '📝';
+      case 'Publicacion': return '⏳';
       case 'modificaciones': return '✏️';
       default: return '🔔';
     }
   };
 
-  // Filtrar notificaciones por tipo según la pestaña activa
+  const formatDateTime = (dateString?: string) => {
+    if (!dateString) return 'Fecha no disponible';
+    const date = new Date(dateString);
+    return date.toLocaleString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   const getFilteredNotifications = () => {
-    switch(activeTab) {
-      case 'solicitudes':
-        return notificaciones.filter(n => n.tipo === 'solicitud');
-      case 'evaluaciones':
-        return notificaciones.filter(n => n.tipo === 'evaluacion');
-      default:
-        return notificaciones;
-    }
+    return notificaciones.slice(0, visibleCount);
   };
 
   return (
     <div className="notifications-container">
-      {/* Botones fijos de navegación */}
+      {/* Botones de navegación */}
       <div className="notifications-nav">
         <button 
           className={`nav-button ${activeTab === 'notificaciones' ? 'active' : ''}`}
-          onClick={() => setActiveTab('notificaciones')}
+          onClick={() => {
+            setActiveTab('notificaciones');
+            setSolicitudesView('list');
+            setSelectedSolicitud(null);
+          }}
         >
           🔔 Notificaciones
           {notificaciones.some(n => !n.leida) && (
@@ -105,70 +138,113 @@ const NotificationsPanel: React.FC = () => {
         </button>
         <button 
           className={`nav-button ${activeTab === 'solicitudes' ? 'active' : ''}`}
-          onClick={() => setActiveTab('solicitudes')}
+          onClick={() => {
+            setActiveTab('solicitudes');
+            setSolicitudesView('list');
+            setSelectedSolicitud(null);
+          }}
         >
-          📝 Solicitudes de publicación
+          📝 Solicitudes
         </button>
         <button 
           className={`nav-button ${activeTab === 'evaluaciones' ? 'active' : ''}`}
-          onClick={() => setActiveTab('evaluaciones')}
+          onClick={() => {
+            setActiveTab('evaluaciones');
+            setSolicitudesView('list');
+            setSelectedSolicitud(null);
+          }}
         >
-          🧐 Evaluaciones de moderador
+           Evaluaciones
         </button>
       </div>
 
       {/* Contenido del panel */}
       <div className="notifications-content">
-        {loading ? (
-          <div className="loading-message">
-            <div className="spinner"></div>
-            <p>Cargando notificaciones...</p>
-          </div>
-        ) : error ? (
-          <div className="error-message">
-            <p>{error}</p>
-            <button 
-              onClick={() => window.location.reload()}
-              className="retry-button"
-            >
-              Reintentar
-            </button>
-            
-          </div>
+        {activeTab === 'solicitudes' ? (
+          solicitudesView === 'detail' && selectedSolicitud ? (
+            <SolicitudDetail 
+              solicitudId={selectedSolicitud} 
+              onBack={handleBackToList}
+            />
+          ) : (
+            <SolicitudesList 
+              onSelectSolicitud={(id) => {
+                setSelectedSolicitud(id);
+                setSolicitudesView('detail');
+              }}
+            />
+          )
+        ) : activeTab === 'evaluaciones' ? (
+        evaluacionesView === 'detail' && selectedEvaluacion ? (
+          <EvaluacionDetail 
+            evaluacionId={selectedEvaluacion}
+            onBack={() => {
+              setSelectedEvaluacion(null);
+              setEvaluacionesView('list');
+            }}
+          />
         ) : (
+          <EvaluationList 
+            onSelectEvaluacion={(id: number) => {
+              setSelectedEvaluacion(id);
+              setEvaluacionesView('detail');
+            }}
+          />
+        )
+      ) : (
           <>
-            <div className="notifications-list">
-              {getFilteredNotifications().length === 0 ? (
-                <div className="empty-message">
-                  No hay {activeTab === 'notificaciones' ? 'notificaciones' : 
-                  activeTab === 'solicitudes' ? 'solicitudes' : 'evaluaciones'}
+            {loading ? (
+              <div className="loading-message">
+                <div className="spinner"></div>
+                <p>Cargando notificaciones...</p>
+              </div>
+            ) : error ? (
+              <div className="error-message">
+                <p>{error}</p>
+                <button onClick={() => window.location.reload()}>Reintentar</button>
+              </div>
+            ) : (
+              <>
+                <div className="notifications-list">
+                  {getFilteredNotifications().length === 0 ? (
+                    <div className="empty-message">
+                      No hay notificaciones
+                    </div>
+                  ) : (
+                    getFilteredNotifications().map(notificacion => (
+                      <div 
+                        key={notificacion.id || Math.random()}
+                        className={`notification-item ${notificacion.leida ? 'read' : 'unread'}`}
+                        onClick={() => handleNotificationClick(notificacion)}
+                      >
+                        <div className="notification-icon">
+                          {getNotificationIcon(notificacion.tipo)}
+                        </div>
+                        <div className="notification-details">
+                          <h3>{notificacion.tipo}</h3>
+                          {notificacion.mensaje && (
+                            <p className="notification-content">{notificacion.mensaje}</p>
+                          )}
+                          <p className="notification-date">
+                            {formatDateTime(notificacion.fechaEnvio)}
+                          </p>
+                        </div>
+                        {!notificacion.leida && <div className="unread-dot"></div>}
+                      </div>
+                    ))
+                  )}
                 </div>
-              ) : (
-                getFilteredNotifications().map(notificacion => (
-                  <div 
-                    key={notificacion.id || Math.random()}
-                    className={`notification-item ${notificacion.leida ? 'read' : 'unread'}`}
-                    onClick={() => handleNotificationClick(notificacion)}
+
+                {notificaciones.length > visibleCount && (
+                  <button 
+                    className="load-more-btn"
+                    onClick={() => setVisibleCount(prev => prev + 5)}
                   >
-                    <div className="notification-icon">
-                      {getNotificationIcon(notificacion.tipo)}
-                    </div>
-                    <div className="notification-details">
-                      <h3>{notificacion.titulo}</h3>
-                      {notificacion.contenido && (
-                        <p className="notification-content">{notificacion.contenido}</p>
-                      )}
-                      <p className="notification-date">
-                        {notificacion.fechaCreacion ? 
-                          new Date(notificacion.fechaCreacion).toLocaleDateString() : 
-                          'Fecha no disponible'}
-                      </p>
-                    </div>
-                    {!notificacion.leida && <div className="unread-dot"></div>}
-                  </div>
-                ))
-              )}
-            </div>
+                    Ver más notificaciones
+                  </button>
+                )}
+              </>
+            )}
           </>
         )}
       </div>

@@ -131,7 +131,7 @@
 }
 
 .notification-item.unread {
-  background-color: #f0f7ff;
+  background-color: #e8eaec;
 }
 
 .notification-icon {
@@ -175,3 +175,5 @@
   background-color: #2196F3;
   border-radius: 50%;
 }
+
+

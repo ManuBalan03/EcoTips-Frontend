@@ -27,7 +27,7 @@ interface Solicitud {
 
 export const obtenerVotosPorPublicacion = async (idPublicacion: number, token: string): Promise<VotosDTO[]> => {
   try {
-    const response = await axios.get(`${BASE_URL}/votos/publicacion/${idPublicacion}`, {
+    const response = await axios.get(`${BASE_URL}/votos/publicaciones/${idPublicacion}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -67,4 +67,19 @@ export const obtenerSolicitudesPendientes = async (token: string): Promise<Solic
     console.error('Error al obtener solicitudes:', error);
     return [];
   }
+};
+
+// En tu archivo de servicios
+export const obtenerSolicitudPorId = async (id: number, token: string): Promise<Solicitud> => {
+  const response = await fetch(`${BASE_URL}/${id}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  
+  if (!response.ok) {
+    throw new Error('Error al obtener la solicitud');
+  }
+  
+  return response.json();
 };

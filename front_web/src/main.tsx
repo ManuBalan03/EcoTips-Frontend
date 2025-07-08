@@ -9,6 +9,7 @@ import Notifications from './routes/Home/Home2';
 // import Dashboard from './routes/Dashboard.tsx';
 // import App from './App.tsx';                                                      
 import LandingPage from './components/pages/LandingPage.tsx';
+import  NotificationsPanel from './routes/Home/NotificationsSection.tsx'
 // import ProtectedRoute from './routes/ProtectedRoute.tsx';
 import { AuthProvider } from './api/AuthContext'; // Importa el AuthProvider
 
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
   {
     path: "/notifications",
     element: <Notifications />,
+  },
+    {
+    path: "/notificaciones",
+    element: <NotificationsPanel />,
   },
 ]);
 
