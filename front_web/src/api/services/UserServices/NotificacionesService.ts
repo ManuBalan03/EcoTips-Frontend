@@ -4,13 +4,13 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:8080/api/notificaciones';
 
 export interface NotificationsDTO {
-  id?: number;
+  idNotificacion?: number;
   tipo: string;
   mensaje: string;
   idUsuario: number;
   idPublicacion?: number;
   fechaEnvio?: string;
-  leida?: boolean;
+  leido?: boolean;
 }
 
 export const obtenerNotificacionesPorUsuario = async (idUsuario: number, token: string): Promise<NotificationsDTO[]> => {
