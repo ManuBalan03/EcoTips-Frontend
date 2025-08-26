@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Usuario, AuthResponse, LoginDTO } from "../types/userexample";
 
 
+
 export const registerUser = async (data: any) => {
   try {
     const response = await api.post("/auth/register", data);
@@ -35,7 +36,7 @@ export const loginUser = async (loginData: LoginDTO): Promise<AuthResponse> => {
 // Ejemplo de función para crear un usuario
 export const crearUsuario = async (userData: Usuario): Promise<Usuario> => {
   try {
-    const response = await api.post("/usuarios", userData);
+    const response = await api.post("/usuarios", userData)
     return response.data;
   } catch (error) {
     console.error("Error al crear usuario:", error);
@@ -63,9 +64,14 @@ export const obtenerUsuarios = async (): Promise<Usuario[]> => {
 };
 
 // Obtener un usuario por ID
-export const obtenerUsuarioPorId = async (userId: number): Promise<Usuario> => {
+export const obtenerUsuarioPorId = async (userId: number, token: string): Promise<Usuario> => {
   try {
-    const response = await api.get(`/usuarios/${userId}`);
+    
+    const response = await api.get(`/usuarios/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
     return response.data;
   } catch (error) {
     console.error("Error obteniendo datos del usuario:", error);
@@ -77,6 +83,22 @@ export const obtenerUsuarioPorId = async (userId: number): Promise<Usuario> => {
 export const actualizarUsuario = async (id: number, userData: Usuario): Promise<Usuario> => {
   try {
     const response = await api.put(`/usuarios/${id}`, userData);
+    return response.data;
+  } catch (error) {
+    console.error("Error al actualizar usuario:", error);
+    throw error;
+  }
+};
+
+
+// Ejemplo de función para actualizar un usuario
+export const actualizarDatosUsuario = async (id: number, userData: Usuario, token:string): Promise<Usuario> => {
+  try {
+    const response = await api.put(`/usuarios/actualizar/${id}`, userData, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
     return response.data;
   } catch (error) {
     console.error("Error al actualizar usuario:", error);

@@ -1,10 +1,11 @@
 export interface Usuario {
-  id?: number;
+  id: number;
   nombre: string;
   email: string;
   fotoPerfil?: string;
   puntosTotales?: number;
   nivel:string;
+  telefono?:string;
 }
 
 export interface AuthResponse {

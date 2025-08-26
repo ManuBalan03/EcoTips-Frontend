@@ -1,16 +1,19 @@
 // components/UserCard.jsx
 import React from "react";
 import "./userinfo.css"; // Estilos por separado
+import { useUserPoints } from '../../context/UserPointsContext'
 
 
 interface UserCardProps {
   nombre: string;
-  puntosTotales: number;
   fotoPerfil?: string; // Puede ser opcional si no siempre hay foto
   nivel:string;
 }
-const UserCard: React.FC<UserCardProps> = ({ nombre, puntosTotales, fotoPerfil, nivel}) => {
-  const xp = puntosTotales || 0;
+const UserCard: React.FC<UserCardProps> = ({ nombre, fotoPerfil, nivel}) => {
+  const { points } = useUserPoints();
+  console.log(points)
+  console.log()
+  const xp = points || 0; 
   const nextLevelXp = 100;
   const porcentaje = Math.min((xp % 100) / nextLevelXp * 100, 100);
   return (

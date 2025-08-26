@@ -3,6 +3,7 @@ import { useAuth } from '../../../api/AuthContext';
 import { crearEvaluacion, obtenerEvaluacionPorId } from '../../../api/services/Publications/EvaluateServices';
 import { obtenerVotosPorPublicacion, VotosDTO } from '../../../api/services/Publications/VotesServices';
 import './Evaluation.css';
+import { useUserPoints } from '../../../context/UserPointsContext'; 
 
 interface EvaluacionDetailProps {
   evaluacionId: number;
@@ -33,6 +34,8 @@ const EvaluacionDetail: React.FC<EvaluacionDetailProps> = ({ evaluacionId, onBac
   const [loadingVotos, setLoadingVotos] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+   const { refreshPoints } = useUserPoints();
+   
 
   // Cargar detalles de la publicación y votos
   useEffect(() => {
@@ -79,6 +82,7 @@ const EvaluacionDetail: React.FC<EvaluacionDetailProps> = ({ evaluacionId, onBac
       };
 
       await crearEvaluacion(evaluacionData, token);
+      await refreshPoints();
       
       // Recargar los votos después de enviar
       const votosActualizados = await obtenerVotosPorPublicacion(evaluacionId, token);

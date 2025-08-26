@@ -6,6 +6,7 @@ export interface EcoTip {
   puntos_totales: number;
   foto_perfil: string;
   nivel:string;
+  telefono?:string;
 }
 
 export interface LoginResponse {

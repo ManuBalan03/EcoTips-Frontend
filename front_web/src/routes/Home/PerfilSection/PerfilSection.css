@@ -1,0 +1,4 @@
+.user-publications-container{
+  display: flex;
+  flex-direction: column;
+}

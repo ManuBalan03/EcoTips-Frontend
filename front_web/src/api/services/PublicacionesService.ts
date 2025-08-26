@@ -55,6 +55,48 @@ export const crearPublicacion = async (
   return response.data;
 };
 
+
+// En PublicacionesService.ts
+export const obtenerPublicacionesPorUsuario = async (
+  userId: number,
+  token: string
+): Promise<PublicacionDTO[]> => {
+  try {
+    console.log('Obteniendo publicaciones para usuario:', userId);
+    
+    const response = await axios.get(`${BASE_URL}/usuario/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    console.log('Respuesta de publicaciones por usuario:', response.data);
+
+    if (response.data && Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.content && Array.isArray(response.data.content)) {
+      return response.data.content;
+    } else {
+      console.error('Formato de respuesta inesperado:', response.data);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error al obtener publicaciones por usuario:', error);
+    if (axios.isAxiosError(error)) {
+      console.error('Detalles del error:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        headers: error.response?.headers
+      });
+    }
+    return [];
+  }
+};
+
+
+
+
 export const obtenerTodasLasPublicaciones = async (token: string): Promise<PublicacionDTO[]> => {
   try {
     console.log('Intentando obtener publicaciones con token:', token.substring(0, 10) + '...');

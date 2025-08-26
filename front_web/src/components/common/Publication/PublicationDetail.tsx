@@ -9,7 +9,11 @@ import {
   agregarReaccion,
   eliminarReaccion
 } from '../../../api/services/PublicacionesService';
+import '../../home/EcoTipCard.css';
 import './Publication.css';
+
+import CommentSection  from '../CommentComponent';
+import '../CommentComponent'
 
 interface DetailsPublicationProps {
   publicacionId: number;
@@ -19,6 +23,7 @@ interface DetailsPublicationProps {
 const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, onBack }) => {
   const { user, token } = useAuth();
   const [publicacion, setPublicacion] = useState<PublicacionDTO | null>(null);
+  // const [publicacion, setPublicacion] = useState<PublicacionDTO []>([]);
   const [comentarios, setComentarios] = useState<ComentarioDTO[]>([]);
   const [nuevoComentario, setNuevoComentario] = useState('');
   const [loading, setLoading] = useState(false);
@@ -195,92 +200,58 @@ const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, 
   }
 
   return (
-    <div className="details-publication-container">
+    <div className="tip-card">
       {onBack && (
         <button onClick={onBack} className="back-button">
           ← Volver
         </button>
       )}
 
-      <div className="publication-header">
-        <h1 className="publication-title">{publicacion.titulo}</h1>
+      
+        <h4 className="publication-title">{publicacion.titulo}</h4>
+
+        {publicacion.contenido && (
+            <img 
+              src={publicacion.contenido} 
+              alt={publicacion.titulo} 
+              className="tip-image"
+            />
+        )}
+        
+
+         <div className="tags-container">
+        {publicacion.descripcion && (
+          <span className="tag">{publicacion.descripcion}</span>
+        )}
+        
+        
+      </div>
         <div className="publication-meta">
-          <span className="author">Publicado por: {publicacion.nombreAutor || 'admin'}</span>
+          <span className="author-info">Publicado por: {publicacion.nombreAutor || 'admin'}</span>
           {publicacion.fechaCreacion && (
             <span className="date">{formatDate(publicacion.fechaCreacion)}</span>
           )}
         </div>
-      </div>
+    
 
-      <div className="publication-content">
-        {publicacion.descripcion && (
-          <p className="publication-description">{publicacion.descripcion}</p>
-        )}
-        
-        {publicacion.contenido && (
-          <div className="publication-image-container">
-            <img 
-              src={publicacion.contenido} 
-              alt={publicacion.titulo} 
-              className="publication-image"
-            />
-          </div>
-        )}
-      </div>
+     
 
-      <div className="publication-actions">
-        <button 
-          className={`like-button ${miReaccion === 'LIKE' ? 'active' : ''}`}
-          onClick={() => handleReaccion('LIKE')}
-        >
-          👍 Me gusta {reacciones['LIKE'] || 0}
-        </button>
-        <span className="comments-count">
-          💬 Comentarios {comentarios.length}
-        </span>
-      </div>
 
-      <div className="comments-section">
-        <h3>Comentarios</h3>
-        
-        <div className="new-comment">
-          <textarea
-            value={nuevoComentario}
-            onChange={(e) => setNuevoComentario(e.target.value)}
-            placeholder="Escribe un comentario..."
-            rows={3}
-            className="comment-input"
-          />
-          <button
-            onClick={handleEnviarComentario}
-            className="comment-submit-button"
-            disabled={!nuevoComentario.trim()}
-          >
-            Publicar
-          </button>
-        </div>
 
-        <div className="comments-list">
-          {comentarios.length === 0 ? (
-            <p className="no-comments">No hay comentarios aún</p>
-          ) : (
-            comentarios.map(comentario => (
-              <div key={comentario.idcomentario} className="comment-item">
-                <div className="comment-header">
-                  <span className="comment-author">
-                    {comentario.nombreAutor || 'Usuario'}
-                  </span>
-                  <span className="comment-date">
-                    {formatDate(comentario.fechaCreacion)}
-                  </span>
-                </div>
-                <p className="comment-content">{comentario.contenido}</p>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
+      
+
+
+<CommentSection 
+  idPublicacion={publicacion?.id ?? 0} // Usa 0 o un valor por defecto
+  onCommentAdded={() => console.log("Comentario agregado")}
+  onReactionUpdated={() => console.log("Reacción actualizada")}
+/>
+
+  
     </div>
+
+                    
+
   );
 };
 

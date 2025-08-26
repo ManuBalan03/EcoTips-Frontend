@@ -9,10 +9,12 @@ import Notifications from './routes/Home/Home2';
 // import Dashboard from './routes/Dashboard.tsx';
 // import App from './App.tsx';                                                      
 import LandingPage from './components/pages/LandingPage.tsx';
-import  NotificationsPanel from './routes/Home/NotificationsSection.tsx'
+import  NotificationsPanel from './routes/Home/NotificationsSection.tsx';
+import PerfilSection from './routes/Home/PerfilSection/PerfilSection.tsx'
+
 // import ProtectedRoute from './routes/ProtectedRoute.tsx';
 import { AuthProvider } from './api/AuthContext'; // Importa el AuthProvider
-
+import { UserPointsProvider } from './context/UserPointsContext'; 
 const router = createBrowserRouter([
   {
     path: "/",
@@ -38,12 +40,18 @@ const router = createBrowserRouter([
     path: "/notificaciones",
     element: <NotificationsPanel />,
   },
+{
+  path: "/perfil",
+    element: <PerfilSection />,
+}
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider> {/* Añade el AuthProvider aquí */}
+      <UserPointsProvider> 
       <RouterProvider router={router} />
+      </UserPointsProvider> 
     </AuthProvider>
   </React.StrictMode>,
 )

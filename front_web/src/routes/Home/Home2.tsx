@@ -31,7 +31,6 @@ function Home() {
           <div className="left-column">
             <UserCard
               nombre={user.nombre}
-              puntosTotales={user.puntosTotales ?? 0}
               fotoPerfil={user.fotoPerfil}
               nivel={user.nivel}
             />
