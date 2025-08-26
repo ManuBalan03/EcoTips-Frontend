@@ -120,7 +120,7 @@ const UserPerfil: React.FC<UserPerfilProps> = ({
               Editar Perfil
             </button>
             <div className="user-level">
-              <div className="xp-bar">
+              <div className="xp-bar-perfile">
                 <div className="xp-progress" style={{ width: `${xp % 100}%` }} />
               </div>
               <small>{usuario.nivel} - {xp}xp</small>
