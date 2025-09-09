@@ -3,7 +3,7 @@ import React from "react";
 import { useAuth } from "../../api/AuthContext";
 import DefaultLayout from "../../components/layout/navbar";
 import UserCard from "../../components/home/userinfo";
-import  NotificationsPanel from "../../components/common/NotificationsPanel";
+import  NotificationsPanel from "../../components/common/NotificationSection/NotificationsPanel";
 import "./Home.css";
 
 function NotificationsSection() {
@@ -33,7 +33,6 @@ function NotificationsSection() {
             <UserCard
               nombre={user.nombre}
               fotoPerfil={user.fotoPerfil}
-              nivel={user.nivel}
             />
           </div>
           

@@ -1,7 +1,7 @@
 // src/contexts/UserPointsContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from '../api/AuthContext';
-import { obtenerUsuarioPorId  } from '../api/services/UserService';
+// import { obtenerUsuarioPorId  } from '../api/services/UserService';
 
 
 interface UserPointsContextType {
@@ -25,14 +25,15 @@ export const UserPointsProvider: React.FC<{children: React.ReactNode}> = ({ chil
   const [points, setPoints] = useState(0);
   const { token, user } = useAuth(); 
   const [nivel,setnivel ]= useState("nivel 0");
+  
 
   const refreshPoints = async () => {
     if (!user?.id || !token) return;
   
     try {
-      const Usuario = await obtenerUsuarioPorId(user.id, token);
-      const nuevosPuntos = Usuario.puntosTotales || 0;
-      const nuevonivel = Usuario.nivel;
+      // const Usuario = await obtenerUsuarioPorId(user.id, token);
+      const nuevosPuntos = user.puntosTotales|| 0
+      const nuevonivel = user.nivel;
       
       // Solo actualiza si cambió el valor
       if (nuevosPuntos !== points) {
