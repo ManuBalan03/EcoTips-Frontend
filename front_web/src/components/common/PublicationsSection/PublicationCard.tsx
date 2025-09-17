@@ -1,4 +1,4 @@
-import { PublicacionDTO } from "../../../api/services/PublicacionesService";
+import { PublicacionDTO } from "../../../api/services/Publications/Types/PublicationType";
 import CommentSection from "../CommentComponent";
 interface Props {
   tip: PublicacionDTO;

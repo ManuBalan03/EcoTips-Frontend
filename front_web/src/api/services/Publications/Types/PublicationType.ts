@@ -1,0 +1,40 @@
+export interface PublicacionDTO {
+  id?: number;
+  titulo: string;
+  contenido: string;
+  descripcion?: string;
+  idUsuario: number;
+  fechaCreacion?: string;
+  nombreAutor?: string;
+  estado?: string;
+}
+
+export interface ReactionsDTO {
+  idReaccion?: number;
+  idPublicacion: number;
+  idUsuario: number;
+  Tipo: string;
+  fechaCreacion?: string;
+  nombreAutor?: string;
+}
+
+export interface ComentarioCreateDTO {
+  idPublicacion: number;
+  idUsuario: number;
+  contenido: string;
+  nombreAutor?: string;
+  fotoPerfil?: string;
+}
+
+export interface ComentarioDTO extends ComentarioCreateDTO {
+  idcomentario?: number;
+  fechaCreacion?: string;
+}
+
+export interface PaginatedResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}

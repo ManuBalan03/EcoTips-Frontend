@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../api/AuthContext';
-import { 
-  PublicacionDTO,
+
+import {
   obtenerComentariosPorPublicacion,
-  crearComentario,
-  ComentarioDTO,
-  contarReaccionesPorTipo,
-  agregarReaccion,
-  eliminarReaccion
-} from '../../../api/services/PublicacionesService';
+  crearComentario
+} from "../../../api/services/Publications/CommentServices";
+
+import {
+  contarReaccionesPorTipo, agregarReaccion
+} from "../../../api/services/Publications/ReactionsServices";
+
+import {  ComentarioDTO, PublicacionDTO} from "../../../api/services/Publications/Types/PublicationType"
+
 import '../../home/EcoTipCard.css';
 import './Publication.css';
 

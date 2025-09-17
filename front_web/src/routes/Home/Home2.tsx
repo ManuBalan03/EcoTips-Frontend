@@ -32,7 +32,6 @@ function Home() {
             <UserCard
               nombre={user.nombre}
               fotoPerfil={user.fotoPerfil}
-              nivel={user.nivel}
             />
           </div>
           

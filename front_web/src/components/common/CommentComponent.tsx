@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../api/AuthContext";
 import {
-  ComentarioDTO,
-  ReactionsDTO,
   obtenerComentariosPorPublicacion,
-  crearComentario,
-  obtenerReaccionesPorPublicacion,
-  agregarReaccion,
+  crearComentario
+} from "../../api/services/Publications/CommentServices";
+
+import {
   eliminarReaccion,
-  contarReaccionesPorTipo
-} from "../../api/services/PublicacionesService";
+  contarReaccionesPorTipo, obtenerReaccionesPorPublicacion, agregarReaccion
+} from "../../api/services/Publications/ReactionsServices";
+
+
+import {  ComentarioDTO, ReactionsDTO} from "../../api/services/Publications/Types/PublicationType"
 import './CommentSection.css';
 
 interface CommentSectionProps {

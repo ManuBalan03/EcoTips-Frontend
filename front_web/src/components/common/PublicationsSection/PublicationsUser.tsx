@@ -1,7 +1,7 @@
 import React from "react";
 import PublicationList from "./PublicationsList";
 import UserPerfil from "../../common/UserSection/UserPerfil";
-import { PublicacionDTO } from "../../../api/services/PublicacionesService";
+import { PublicacionDTO } from "../../../api/services/Publications/Types/PublicationType";
 import './PublicationsUser.css';
 
 interface UserPublicationsSectionProps {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { crearPublicacion, obtenerTodasLasPublicaciones, PublicacionDTO } from "../../api/services/PublicacionesService";
+import { crearPublicacion, obtenerTodasLasPublicaciones } from "../../api/services/Publications/PublicacionesService";
+import {PublicacionDTO} from "../../api/services/Publications/Types/PublicationType"
 import { useAuth } from "../../api/AuthContext";
 import EcoTipFormModal from "../../components/common/PublicationsSection/PublicationFormModal";
 import PublicationsList from "../../components/common/PublicationsSection/PublicationsList";
@@ -13,12 +14,14 @@ const EcoTipsPage = () => {
   const [tips, setTips] = useState<PublicacionDTO[]>([]);
   const [showModal, setShowModal] = useState(false);
 
+
   useEffect(() => {
     const cargarPublicaciones = async () => {
       if (!token) return;
       try {
         const publicaciones = await obtenerTodasLasPublicaciones(token);
-        setTips(publicaciones);
+        console.log(publicaciones)
+        setTips(publicaciones.content);
       } catch (error) {
         console.error("Error al obtener publicaciones:", error);
       }
@@ -37,6 +40,7 @@ const EcoTipsPage = () => {
       alert("No se pudo publicar el EcoTip.");
     }
   };
+  console.log("uff "+tips)
 
   return (
     <div className="ecotips-container">

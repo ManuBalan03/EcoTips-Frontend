@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { PublicacionDTO } from "../../../api/services/PublicacionesService";
+import { PublicacionDTO } from "../../../api/services/Publications/Types/PublicationType";
+
 
 interface Props {
   onClose: () => void;

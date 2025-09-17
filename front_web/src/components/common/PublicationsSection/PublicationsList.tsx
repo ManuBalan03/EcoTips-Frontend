@@ -1,4 +1,4 @@
-import { PublicacionDTO } from "../../../api/services/PublicacionesService";
+import { PublicacionDTO } from "../../../api/services/Publications/Types/PublicationType";
 import EcoTipCard from "./PublicationCard";
 
 interface Props {
@@ -10,7 +10,7 @@ onDelete?: (id: number) => void;  // Añade el parámetro number
 
 const PublicationList = ({ tips, user, onDelete, onEdit }: Props) => {
   if (!tips.length) return <p>No se encontraron publicaciones.</p>;
-
+console.log("aaa  " +tips)
 
 return (
     <div className="tips-list">
