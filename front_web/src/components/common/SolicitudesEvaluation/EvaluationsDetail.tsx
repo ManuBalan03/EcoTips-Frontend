@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../../api/AuthContext';
-import { crearEvaluacion, obtenerEvaluacionPorId } from '../../../api/services/Publications/EvaluateServices';
-import { obtenerVotosPorPublicacion, VotosDTO } from '../../../api/services/Publications/VotesServices';
-import './Evaluation.css';
-import { useUserPoints } from '../../../context/UserPointsContext'; 
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../../../api/AuthContext";
+import { crearEvaluacion } from "../../../api/services/Publications/EvaluateServices";
+import { obtenerVotosPorPublicacion, VotosDTO } from "../../../api/services/Publications/VotesServices";
+import { obtenerPublicacionPorId } from "../../../api/services/Publications/PublicacionesService";
+import { useUserPoints } from "../../../context/UserPointsContext";
+import "./Evaluation.css";
 
 interface EvaluacionDetailProps {
   evaluacionId: number;
@@ -13,7 +14,7 @@ interface EvaluacionDetailProps {
 interface PublicacionDTO {
   id: number;
   titulo: string;
-  contenido: string;
+  contenido?: string;
   descripcion?: string;
   estado?: string;
   fechaCreacion?: string;
@@ -21,150 +22,95 @@ interface PublicacionDTO {
   fotoPerfil?: string;
 }
 
-// Tipo para los veredictos posibles
-type Veredicto = 'APROBADA' | 'RECHAZADA' | 'MODIFICACION';
+type Veredicto = "APROBADA" | "RECHAZADA" | "MODIFICACION";
 
 const EvaluacionDetail: React.FC<EvaluacionDetailProps> = ({ evaluacionId, onBack }) => {
   const { user, token } = useAuth();
   const [publicacion, setPublicacion] = useState<PublicacionDTO | null>(null);
   const [votos, setVotos] = useState<VotosDTO[]>([]);
-  const [comentario, setComentario] = useState('');
+  const [comentario, setComentario] = useState("");
   const [veredicto, setVeredicto] = useState<Veredicto | null>(null);
   const [loading, setLoading] = useState(false);
-  const [loadingVotos, setLoadingVotos] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-   const { refreshPoints } = useUserPoints();
-   
+  const { refreshPoints } = useUserPoints();
 
-  // Cargar detalles de la publicación y votos
   useEffect(() => {
+    if (!token || !evaluacionId) return;
+    let isMounted = true;
+    setLoading(true);
+
     const cargarDetalles = async () => {
-      if (!token || !evaluacionId) return;
-      
-      setLoading(true);
-      setError(null);
-      
       try {
         const [publicacionData, votosData] = await Promise.all([
-          obtenerEvaluacionPorId(evaluacionId, token),
-          obtenerVotosPorPublicacion(evaluacionId, token)
+          obtenerPublicacionPorId(evaluacionId, token),
+          obtenerVotosPorPublicacion(evaluacionId, token),
         ]);
-        
-        setPublicacion(publicacionData);
-        setVotos(votosData);
+        if (isMounted) {
+          setPublicacion(publicacionData as PublicacionDTO);
+          setVotos(votosData);
+        }
       } catch (err) {
         console.error("Error al cargar detalles:", err);
-        setError("No se pudieron cargar los detalles de la evaluación");
+        if (isMounted) setError("No se pudieron cargar los detalles");
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     cargarDetalles();
+    return () => { isMounted = false; };
   }, [evaluacionId, token]);
 
   const handleEnviarEvaluacion = async () => {
-    if (!user?.id || !token || !veredicto || submitting || !publicacion) return;
-    
+    if (!user?.idUsuario || !token || !veredicto || !publicacion) return;
     setSubmitting(true);
     setError(null);
-    
+
     try {
-      const evaluacionData = {
+      await crearEvaluacion({
         veredicto,
         comentario_final: comentario,
         idpublicacion: publicacion.id,
-        idUsuario: user.id,
+        idUsuario: user.idUsuario,
         nombreAutor: user.nombre,
         fotoPerfil: user.fotoPerfil,
-        fecha_evaluacion: new Date().toISOString()
-      };
+        fecha_evaluacion: new Date().toISOString(),
+      }, token);
 
-      await crearEvaluacion(evaluacionData, token);
       await refreshPoints();
-      
-      // Recargar los votos después de enviar
       const votosActualizados = await obtenerVotosPorPublicacion(evaluacionId, token);
       setVotos(votosActualizados);
-      
-      onBack(); // Volver a la lista después de enviar
-      
+      onBack();
     } catch (err) {
       console.error("Error al enviar evaluación:", err);
-      setError("Error al enviar la evaluación. Intente nuevamente.");
+      setError("No se pudo enviar la evaluación. Intenta nuevamente.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return 'Fecha no disponible';
-    const date = new Date(dateString);
-    return date.toLocaleString('es-ES', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  const formatDate = (dateString?: string) =>
+    dateString ? new Date(dateString).toLocaleString("es-ES", {
+      day: "2-digit", month: "2-digit", year: "numeric",
+      hour: "2-digit", minute: "2-digit"
+    }) : "Fecha no disponible";
 
-  const obtenerIniciales = (nombre?: string): string => {
-    if (!nombre) return 'U';
-    return nombre.charAt(0).toUpperCase();
-  };
+  const obtenerIniciales = (nombre?: string) => nombre ? nombre.charAt(0).toUpperCase() : "U";
+  const obtenerIconoVeredicto = (v: Veredicto) => v === "APROBADA" ? "👍" : v === "RECHAZADA" ? "👎" : "✏️";
 
-  const obtenerIconoVeredicto = (veredicto: Veredicto) => {
-    switch(veredicto) {
-      case 'APROBADA': return '👍';
-      case 'RECHAZADA': return '👎';
-      case 'MODIFICACION': return '✏️';
-      default: return '';
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-        <p>Cargando detalles...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="error-message">
-        <p>{error}</p>
-        <button onClick={() => window.location.reload()}>Reintentar</button>
-      </div>
-    );
-  }
-
-  if (!publicacion) {
-    return (
-      <div className="empty-message">
-        No se encontró la evaluación solicitada
-      </div>
-    );
-  }
+  if (loading) return <p>Cargando detalles...</p>;
+  if (error) return <p className="error">{error}</p>;
+  if (!publicacion) return <p>No se encontró la evaluación solicitada</p>;
 
   return (
     <div className="evaluation-detail-container">
-      <button onClick={onBack} className="back-button">
-        ← Volver a la lista
-      </button>
+      <button onClick={onBack} className="back-button">← Volver</button>
 
       <div className="evaluation-header">
         <div className="evaluacion-avatar">
-          {publicacion.fotoPerfil ? (
-            <img src={publicacion.fotoPerfil} alt={publicacion.nombreAutor || 'Autor'} />
-          ) : (
-            <div className="avatar-initial">
-              {obtenerIniciales(publicacion.nombreAutor)}
-            </div>
-          )}
+          {publicacion.fotoPerfil ? <img src={publicacion.fotoPerfil} alt={publicacion.nombreAutor} /> :
+            <div className="avatar-initial">{obtenerIniciales(publicacion.nombreAutor)}</div>}
         </div>
         <h1>{publicacion.titulo}</h1>
         <div className="evaluation-meta">
@@ -181,102 +127,45 @@ const EvaluacionDetail: React.FC<EvaluacionDetailProps> = ({ evaluacionId, onBac
 
         <section className="content-section">
           <h2>Contenido</h2>
-          {publicacion.contenido ? (
-            <div className="content-display">
-              <img src={publicacion.contenido} alt="Contenido de la publicación" />
-            </div>
-          ) : (
-            <p>No hay contenido adjunto</p>
-          )}
+          {publicacion.contenido ? <div className="content-display"><img src={publicacion.contenido} alt="Contenido" /></div> :
+            <p>No hay contenido adjunto</p>}
         </section>
 
         <section className="votes-section">
           <h2>Votos ({votos.length})</h2>
-          {votos.length === 0 ? (
-            <p className="no-votes">Aún no hay votos registrados</p>
-          ) : (
+          {votos.length === 0 ? <p className="no-votes">Aún no hay votos registrados</p> :
             <div className="votes-list">
-              {votos.map((voto) => (
+              {votos.map(voto => (
                 <div key={voto.idVotos} className="vote-item">
                   <div className="vote-avatar">
-                    {voto.fotoPerfil ? (
-                      <img src={voto.fotoPerfil} alt={voto.nombreAutor || 'Usuario'} />
-                    ) : (
-                      <div className="avatar-initial-small">
-                        {obtenerIniciales(voto.nombreAutor)}
-                      </div>
-                    )}
+                    {voto.fotoPerfil ? <img src={voto.fotoPerfil} alt={voto.nombreAutor} /> :
+                      <div className="avatar-initial-small">{obtenerIniciales(voto.nombreAutor)}</div>}
                   </div>
                   <div className="vote-details">
                     <div className="vote-header">
-                      <span className="vote-author">{voto.nombreAutor || 'Usuario'}</span>
-                      <span className={`vote-decision ${voto.Voto?.toLowerCase()}`}>
-                        {obtenerIconoVeredicto(voto.Voto as Veredicto)} {voto.Voto}
-                      </span>
+                      <span className="vote-author">{voto.nombreAutor}</span>
+                      <span className={`vote-decision ${voto.Voto?.toLowerCase()}`}>{obtenerIconoVeredicto(voto.Voto as Veredicto)} {voto.Voto}</span>
                     </div>
-                    {voto.Comentario && (
-                      <p className="vote-comment">{voto.Comentario}</p>
-                    )}
-                    <span className="vote-date">
-                      {voto.fechaVoto ? formatDate(voto.fechaVoto) : ''}
-                    </span>
+                    {voto.Comentario && <p className="vote-comment">{voto.Comentario}</p>}
+                    <span className="vote-date">{voto.fechaVoto ? formatDate(voto.fechaVoto) : ''}</span>
                   </div>
                 </div>
               ))}
             </div>
-          )}
+          }
         </section>
 
         <section className="evaluation-form">
           <h2>Tu evaluación</h2>
           <div className="veredict-options">
-            <label className="veredict-option">
-              <input
-                type="radio"
-                name="veredicto"
-                checked={veredicto === 'APROBADA'}
-                onChange={() => setVeredicto('APROBADA')}
-              />
-              <span>👍 Aprobar</span>
-            </label>
-            <label className="veredict-option">
-              <input
-                type="radio"
-                name="veredicto"
-                checked={veredicto === 'RECHAZADA'}
-                onChange={() => setVeredicto('RECHAZADA')}
-              />
-              <span>👎 Rechazar</span>
-            </label>
-            <label className="veredict-option">
-              <input
-                type="radio"
-                name="veredicto"
-                checked={veredicto === 'MODIFICACION'}
-                onChange={() => setVeredicto('MODIFICACION')}
-              />
-              <span>✏️ Requiere modificaciones</span>
-            </label>
+            <label><input type="radio" name="veredicto" checked={veredicto === 'APROBADA'} onChange={() => setVeredicto('APROBADA')} /> 👍 Aprobar</label>
+            <label><input type="radio" name="veredicto" checked={veredicto === 'RECHAZADA'} onChange={() => setVeredicto('RECHAZADA')} /> 👎 Rechazar</label>
+            <label><input type="radio" name="veredicto" checked={veredicto === 'MODIFICACION'} onChange={() => setVeredicto('MODIFICACION')} /> ✏️ Requiere modificaciones</label>
           </div>
-
-          <div className="comment-section">
-            <label>Comentario (Obligatorio)</label>
-            <textarea
-              value={comentario}
-              onChange={(e) => setComentario(e.target.value)}
-              placeholder="Explica tu decisión..."
-              rows={3}
-            />
-          </div>
-
-          <button
-            onClick={handleEnviarEvaluacion}
-            className="submit-button"
-            disabled={!veredicto || submitting}
-          >
+          <textarea value={comentario} onChange={e => setComentario(e.target.value)} placeholder="Explica tu decisión..." rows={3} />
+          <button onClick={handleEnviarEvaluacion} disabled={!veredicto || submitting}>
             {submitting ? 'Enviando...' : 'Enviar Voto'}
           </button>
-
           {error && <p className="error-message">{error}</p>}
         </section>
       </div>

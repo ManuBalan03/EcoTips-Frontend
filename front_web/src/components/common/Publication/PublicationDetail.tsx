@@ -100,12 +100,12 @@ const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, 
   }, [publicacionId, token]);
 
   const handleEnviarComentario = async () => {
-    if (!user?.id || !token || !publicacionId || !nuevoComentario.trim()) return;
+    if (!user?.idUsuario || !token || !publicacionId || !nuevoComentario.trim()) return;
     
     try {
       const comentarioData = {
         idPublicacion: publicacionId,
-        idUsuario: user.id,
+        idUsuario: user.idUsuario,
         contenido: nuevoComentario,
         nombreAutor: user.nombre,
         fotoPerfil: user.fotoPerfil
@@ -122,7 +122,7 @@ const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, 
   };
 
   const handleReaccion = async (tipo: string) => {
-    if (!user?.id || !token || !publicacionId) return;
+    if (!user?.idUsuario || !token || !publicacionId) return;
     
     try {
       // Si ya reaccionó con este tipo, eliminar la reacción
@@ -149,7 +149,7 @@ const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, 
       else {
         await agregarReaccion({
           idPublicacion: publicacionId,
-          idUsuario: user.id,
+          idUsuario: user.idUsuario,
           Tipo: tipo
         }, token);
         

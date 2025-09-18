@@ -13,19 +13,23 @@ function PerfilSection() {
   const [publicaciones, setPublicaciones] = useState<PublicacionDTO[]>([]);
   const [userCompleto, setUserCompleto] = useState<Usuario | null>(null);
   const [loading, setLoading] = useState(true);
-console.log("Montando componente")
+
+  console.log("Montando componente");
+  console.log("Estado de useAuth:", { user, isAuthenticated, token });
+
   // Cargar datos completos del usuario y sus publicaciones
 useEffect(() => {
+  // console.log("Entrando al useEffect con:", { isAuthenticated, user?.idUsuario , token });
+
   const cargarDatos = async () => {
     try {
       console.log("Ejecutando cargarDatos...");
       const [usuarioCompleto, publicacionesData] = await Promise.all([
-        obtenerUsuarioPorId(user!.id, token!),
-        obtenerPublicacionesPorUsuario(user!.id, token!)
+        obtenerUsuarioPorId(user!.idUsuario, token!),
+        obtenerPublicacionesPorUsuario(user!.idUsuario, token!)
       ]);
 
       console.log("Publicaciones recibidas:", publicacionesData);
-
       setUserCompleto(usuarioCompleto);
 
       if (Array.isArray(publicacionesData)) {
@@ -42,12 +46,14 @@ useEffect(() => {
     }
   };
 
-  if (isAuthenticated && user?.id && token) {
+  if (isAuthenticated && user?.idUsuario && token) {
+    console.log("Sí hay user/token, cargando datos...");
     cargarDatos();
   } else {
-    console.log("No hay authUser/token todavía, esperando...");
+    console.log("No hay user/token todavía, esperando...");
   }
 }, [isAuthenticated, user, token]);
+
   const handleDeletePublication = (id: number) => {
     setPublicaciones(publicaciones.filter(pub => pub.id !== id));
   };
@@ -94,7 +100,7 @@ useEffect(() => {
             telefono: userCompleto?.telefono || "No disponible",
             fotoPerfil: userCompleto?.fotoPerfil || user.fotoPerfil,
             nivel: userCompleto?.nivel || user.nivel || "Principiante",
-            id: userCompleto?.id || user.id
+            id: userCompleto?.idUsuario || user.idUsuario
           }}
           publicaciones={publicaciones}
           onDeletePublication={handleDeletePublication}

@@ -91,7 +91,7 @@ const CommentSection = ({
       return;
     }
     
-    if (!user?.id) {
+    if (!user?.idUsuario) {
       console.log("Usuario no válido:", user);
       return;
     }
@@ -106,14 +106,14 @@ const CommentSection = ({
     try {
       console.log("Enviando comentario con datos:", {
         idPublicacion,
-        idUsuario: user.id,
+        idUsuario: user.idUsuario,
         contenido: newComment.trim(),
         nombreAutor: user.nombre
       });
       
       const comentario = await crearComentario({
         idPublicacion,
-        idUsuario: user.id,
+        idUsuario: user.idUsuario,
         contenido: newComment.trim(),
         nombreAutor: user.nombre,
         fotoPerfil: user.fotoPerfil
@@ -136,18 +136,18 @@ const CommentSection = ({
   };
 
   const handleReaction = async (tipo: string) => {
-    if (!user?.id || !token || processingReaction) return;
+    if (!user?.idUsuario || !token || processingReaction) return;
     
     setProcessingReaction(true);
     
     try {
       console.log("=== DEBUG REACCIÓN ===");
       console.log("Tipo de reacción:", tipo);
-      console.log("Usuario ID:", user.id);
+      console.log("Usuario ID:", user.idUsuario);
       console.log("ID Publicación:", idPublicacion);
       
       // Buscar si el usuario ya tiene una reacción en esta publicación
-      const reaccionExistente = reactions.find(r => r.idUsuario === user.id);
+      const reaccionExistente = reactions.find(r => r.idUsuario === user.idUsuario);
       console.log("Reacción existente:", reaccionExistente);
       
       if (reaccionExistente) {
@@ -158,7 +158,7 @@ const CommentSection = ({
           await eliminarReaccion(reaccionExistente.idReaccion!, token);
           
           // Actualizar estado local - remover la reacción del usuario
-          setReactions(prev => prev.filter(r => r.idUsuario !== user.id));
+          setReactions(prev => prev.filter(r => r.idUsuario !== user.idUsuario));
           
         } else {
           // Si es diferente, actualizarla (eliminar la anterior y crear nueva)
@@ -167,14 +167,14 @@ const CommentSection = ({
           
           const nuevaReaccion = await agregarReaccion({
             idPublicacion,
-            idUsuario: user.id,
+            idUsuario: user.idUsuario,
             Tipo: tipo,
             nombreAutor: user.nombre
           }, token);
           
           // Actualizar estado local - reemplazar la reacción del usuario
           setReactions(prev => 
-            prev.map(r => r.idUsuario === user.id ? nuevaReaccion : r)
+            prev.map(r => r.idUsuario === user.idUsuario ? nuevaReaccion : r)
           );
         }
       } else {
@@ -182,7 +182,7 @@ const CommentSection = ({
         console.log("Creando nueva reacción");
         const nuevaReaccion = await agregarReaccion({
           idPublicacion,
-          idUsuario: user.id,
+          idUsuario: user.idUsuario,
           Tipo: tipo,
           nombreAutor: user.nombre
         }, token);
@@ -218,7 +218,7 @@ const CommentSection = ({
   ];
 
   // Buscar la reacción actual del usuario
-  const userReaction = reactions.find(r => r.idUsuario === user?.id);
+  const userReaction = reactions.find(r => r.idUsuario === user?.idUsuario);
   const totalReactions = Object.values(reactionCounts).reduce((a, b) => a + b, 0);
   
   // Buscar el tipo de reacción del usuario para mostrar el emoji correcto

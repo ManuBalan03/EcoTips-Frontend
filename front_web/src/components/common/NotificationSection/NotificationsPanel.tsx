@@ -41,16 +41,16 @@ const NotificationsPanel: React.FC = () => {
 
   // 🚀 Cargar notificaciones iniciales cuando se selecciona la pestaña de notificaciones
   useEffect(() => {
-    if (!user?.id || !token || activeTab !== 'notificaciones') return;
+    if (!user?.idUsuario || !token || activeTab !== 'notificaciones') return;
     loadNotificaciones(0);
   }, [user, token, activeTab]);
 
   // 🚀 Cargar contador de no leídas en un efecto separado
   useEffect(() => {
     const fetchUnread = async () => {
-      if (!user?.id || !token) return;
+      if (!user?.idUsuario || !token) return;
       try {
-        const count = await obtenerContadorNoLeidas(user.id, token);
+        const count = await obtenerContadorNoLeidas(user.idUsuario, token);
         setUnreadCount(count);
       } catch (err) {
         console.error("Error al cargar contador de no leídas:", err);
@@ -60,13 +60,13 @@ const NotificationsPanel: React.FC = () => {
   }, [user, token]);
 
   const loadNotificaciones = async (pageToLoad: number) => {
-    if (!user?.id || !token) return;
+    if (!user?.idUsuario || !token) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      const data = await obtenerNotificacionesPaginadas(user.id, { page: pageToLoad, size: 5 }, token);
+      const data = await obtenerNotificacionesPaginadas(user.idUsuario, { page: pageToLoad, size: 5 }, token);
 
       if (pageToLoad === 0) {
         setNotificaciones(data.content);
@@ -85,7 +85,7 @@ const NotificationsPanel: React.FC = () => {
   };
 
   const handleNotificationClick = async (notificacion: NotificationsDTO) => {
-    if (!user?.id || !token) return;
+    if (!user?.idUsuario || !token) return;
 
     const notificationId = notificacion.idNotificacion;
     const publicacionId = notificacion.idPublicacion;

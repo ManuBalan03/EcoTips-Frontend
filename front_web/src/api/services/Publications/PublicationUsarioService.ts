@@ -6,7 +6,7 @@ const BASE_URL = 'http://localhost:8082/api/publicaciones';
 export const obtenerPublicacionesPorUsuario = async (
   userId: number,
   token: string,
-  estado?: string,
+  estado?: "APROBADA",
   page: number = 0,
   size: number = 10
 ): Promise<PublicacionDTO[]> => {
