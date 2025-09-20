@@ -6,7 +6,7 @@ import "./UserPerfil.css";
 import { useAuth } from "../../../api/AuthContext";
 
 interface Usuario {
-  id: number;
+  idUsuario: number;
   nombre: string;
   email: string;
   telefono?: string;
@@ -17,7 +17,7 @@ interface Usuario {
 
 interface UserPerfilProps {
   usuario?: Usuario;
-  id?: number;
+  idUsuario?: number;
   nombre?: string;
   email?: string;
   telefono?: string;
@@ -28,7 +28,7 @@ interface UserPerfilProps {
 
 const UserPerfil: React.FC<UserPerfilProps> = ({ 
   usuario: usuarioProp, 
-  id, 
+  idUsuario, 
   nombre, 
   email, 
   telefono, 
@@ -43,7 +43,7 @@ const UserPerfil: React.FC<UserPerfilProps> = ({
 
   // Crear objeto usuario a partir de props individuales o del objeto completo
   const initialUsuario = usuarioProp || {
-    id: id || 0,
+    idUsuario: idUsuario || 0,
     nombre: nombre || "Usuario",
     email: email || "",
     telefono: telefono,
@@ -58,9 +58,9 @@ const UserPerfil: React.FC<UserPerfilProps> = ({
   useEffect(() => {
     if (usuarioProp) {
       setUsuario(usuarioProp);
-    } else if (id !== undefined || nombre !== undefined) {
+    } else if (idUsuario !== undefined || nombre !== undefined) {
       setUsuario({
-        id: id || usuario.id,
+        idUsuario: idUsuario || usuario.idUsuario,
         nombre: nombre || usuario.nombre,
         email: email || usuario.email,
         telefono: telefono !== undefined ? telefono : usuario.telefono,
@@ -69,11 +69,13 @@ const UserPerfil: React.FC<UserPerfilProps> = ({
         seguidores: seguidores !== undefined ? seguidores : usuario.seguidores
       });
     }
-  }, [usuarioProp, id, nombre, email, telefono, fotoPerfil, nivel, seguidores]);
+  }, [usuarioProp, idUsuario, nombre, email, telefono, fotoPerfil, nivel, seguidores]);
 
   const handleSave = async (data: Partial<Usuario>) => {
     try {
-      const updatedUser = await actualizarDatosUsuario(usuario.id, { ...usuario, ...data }, token || "");
+      console.log("ssssssssss")
+      console.log(usuario.idUsuario)
+      const updatedUser = await actualizarDatosUsuario(usuario.idUsuario, { ...usuario, ...data }, token || "");
       setUsuario(updatedUser);
       setEditing(false);
     } catch (error) {

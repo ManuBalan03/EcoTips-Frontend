@@ -5,13 +5,13 @@ import UserPublicationsSection from "../../../components/common/PublicationsSect
 import { PublicacionDTO } from "../../../api/services/Publications/Types/PublicationType";
 import { obtenerPublicacionesPorUsuario } from "../../../api/services/Publications/PublicationUsarioService";
 import { obtenerUsuarioPorId } from "../../../api/services/UserService";
-import { Usuario } from "../../../api/types/userexample";
+import { UsuarioDTO } from "../../../api/types/UserTypes";
 import './PerfilSection.css'
 
 function PerfilSection() {
   const { user, isAuthenticated, token } = useAuth();
   const [publicaciones, setPublicaciones] = useState<PublicacionDTO[]>([]);
-  const [userCompleto, setUserCompleto] = useState<Usuario | null>(null);
+  const [userCompleto, setUserCompleto] = useState<UsuarioDTO | null>(null);
   const [loading, setLoading] = useState(true);
 
   console.log("Montando componente");
@@ -100,7 +100,7 @@ useEffect(() => {
             telefono: userCompleto?.telefono || "No disponible",
             fotoPerfil: userCompleto?.fotoPerfil || user.fotoPerfil,
             nivel: userCompleto?.nivel || user.nivel || "Principiante",
-            id: userCompleto?.idUsuario || user.idUsuario
+            idUsuario: userCompleto?.idUsuario || user.idUsuario
           }}
           publicaciones={publicaciones}
           onDeletePublication={handleDeletePublication}

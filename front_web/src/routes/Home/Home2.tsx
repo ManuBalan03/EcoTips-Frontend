@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth } from "../../api/AuthContext";
 import DefaultLayout from "../../components/layout/navbar";
 import UserCard from "../../components/home/userinfo";
-import  SolicitudesPage from "../../components/common/ExpertVote";
+// import  SolicitudesPage from "../../components/common/ExpertVote";
 import "./Home.css";
 
 function Home() {
@@ -37,7 +37,7 @@ function Home() {
           
           {/* Columna central: EcoTipsPage */}
           <div className="center-column">
-            < SolicitudesPage />
+            {/* < SolicitudesPage /> */}
           </div>
           
           {/* Columna derecha: Espacio vacío para contenido futuro */}

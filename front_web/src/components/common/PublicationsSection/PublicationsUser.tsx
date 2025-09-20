@@ -3,27 +3,22 @@ import PublicationList from "./PublicationsList";
 import UserPerfil from "../../common/UserSection/UserPerfil";
 import { PublicacionDTO } from "../../../api/services/Publications/Types/PublicationType";
 import './PublicationsUser.css';
+import { UsuarioDTO } from "../../../api/types/UserTypes";
 
 interface UserPublicationsSectionProps {
-  user: {
-    nombre: string;
-    email: string;
-    fotoPerfil?: string;
-    nivel: string;
-    id:number;
-    telefono:string;
-  };
+  user: UsuarioDTO;
   publicaciones: PublicacionDTO[];
   onDeletePublication: (id: number) => void;
   onEditPublication: (id: number) => void;
 }
-
 const UserPublicationsSection: React.FC<UserPublicationsSectionProps> = ({
   user,
   publicaciones,
   onDeletePublication,
   onEditPublication
 }) => {
+  console.log(user.idUsuario)
+  console.log("dadad")
   return (
     <div className="user-publications-container">
       {/* Sección de información del usuario */}
@@ -34,7 +29,7 @@ const UserPublicationsSection: React.FC<UserPublicationsSectionProps> = ({
           fotoPerfil={user.fotoPerfil}
           nivel={user.nivel}
           email={user.email} 
-          id={user.id} 
+          idUsuario={user.idUsuario} 
           telefono={user.telefono}       />
 
       

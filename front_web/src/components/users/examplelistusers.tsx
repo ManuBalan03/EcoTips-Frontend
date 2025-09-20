@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { obtenerUsuarios } from '../../api/services/UserService.ts';
-import { Usuario } from '../../api/types/userexample.ts';
+import { Usuario } from '../../api/types/UserTypes.ts';
 // Definir un tipo de Usuario si no lo tienes ya
 
 function ListaUsuarios() {
@@ -47,8 +47,8 @@ function ListaUsuarios() {
       <h2>Lista de Usuarios</h2>
       <ul>
         {usuarios.map(usuario => (
-          <li key={usuario.id}>
-            {usuario.id} -{usuario.nombre}- {usuario.email}
+          <li key={usuario.idUsuario}>
+            {usuario.idUsuario} -{usuario.nombre}- {usuario.email}
             </li>
           
         ))}

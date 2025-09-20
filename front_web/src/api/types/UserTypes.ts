@@ -1,4 +1,4 @@
-export interface Usuario {
+export interface UsuarioDTO {
   idUsuario: number;
   nombre: string;
   email: string;
@@ -10,7 +10,7 @@ export interface Usuario {
 
 export interface AuthResponse {
   token: string;
-  user: Usuario;
+  user: UsuarioDTO;
 }
 
 export interface LoginDTO {

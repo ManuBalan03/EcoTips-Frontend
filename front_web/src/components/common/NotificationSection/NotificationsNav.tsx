@@ -1,41 +1,47 @@
-// components/NotificationsNav.tsx
-import React from 'react';
+// import React from 'react';
+import { ActiveTab } from './NotificationsPanel';
 
 interface NotificationsNavProps {
   activeTab: string;
   unreadCount: number;
   onTabChange: (tab: string) => void;
+   availableTabs: ActiveTab[];
 }
 
 const NotificationsNav: React.FC<NotificationsNavProps> = ({
   activeTab,
   unreadCount,
-  onTabChange
+  onTabChange,
+   availableTabs
 }) => {
-  const tabs = [
-    { id: 'notificaciones', label: '🔔 Notificaciones', showBadge: true },
-    { id: 'solicitudes', label: '📝 Solicitudes', showBadge: false },
-    { id: 'evaluaciones', label: 'Evaluaciones', showBadge: false },
-  ];
+    const tabLabels: Record<ActiveTab, string> = {
+    notificaciones: `Notificaciones`,
+    solicitudes: 'Solicitudes',
+    evaluaciones: 'Evaluaciones',
+    publicacion: 'Publicación'
+  };
 
   return (
-    <div className="notifications-nav">
-      {tabs.map(tab => (
+
+    
+    <nav className="notifications-nav">
+      {availableTabs.map(tab => (
         <button
-          key={tab.id}
-          className={`nav-button ${activeTab === tab.id ? 'active' : ''}`}
-          onClick={() => onTabChange(tab.id)}
+          key={tab}
+          className={`nav-button ${activeTab === tab ? 'active' : ''}`}
+          onClick={() => onTabChange(tab)}
         >
-          {tab.label}
-          {tab.showBadge && unreadCount > 0 && (
-            <span className="unread-badge">
-              {unreadCount}
-            </span>
-          )}
+           {tabLabels[tab]}
+            {tab === 'notificaciones' && unreadCount > 0 && (
+              <span className="unread-badge">
+                {unreadCount}
+              </span>
+            )}
         </button>
       ))}
-    </div>
+    </nav>
   );
 };
 
 export default NotificationsNav;
+

@@ -9,7 +9,7 @@ import {
   obtenerContadorNoLeidas,
   obtenerNotificacionesPaginadas
 } from '../../../api/services/UserServices/NotificacionesService';
-import SolicitudesList from '..//SolicitudesExpert/SolicitudesList';
+import SolicitudesList from '../SolicitudesExpert/SolicitudesList';
 import SolicitudDetail from '../SolicitudesExpert/SolicitudDetail';
 import EvaluationList from '../SolicitudesEvaluation/EvaluationList';
 import EvaluacionDetail from '../SolicitudesEvaluation/EvaluationsDetail';
@@ -18,9 +18,18 @@ import NotificationsList from '../NotificationSection/NotificationList';
 import NotificationsNav from '../NotificationSection/NotificationsNav';
 import './NotificationsPanel.css';
 
-type ActiveTab = 'notificaciones' | 'solicitudes' | 'evaluaciones' | 'publicacion';
+// Definir tipos
+export type ActiveTab = 'notificaciones' | 'solicitudes' | 'evaluaciones' | 'publicacion';
 type SolicitudesView = 'list' | 'detail';
 type PublicacionView = 'list' | 'detail'; 
+
+// Definir niveles de usuario
+const USER_LEVELS = {
+  BASE: "nivel 0",
+  INTERMEDIO: "nivel 1",
+  EXPERTO: "nivel 2",
+  ADMIN: "admin"
+};
 
 const NotificationsPanel: React.FC = () => {
   const [publicacionView, setPublicacionView] = useState<PublicacionView>('list');
@@ -38,6 +47,33 @@ const NotificationsPanel: React.FC = () => {
   const [notificaciones, setNotificaciones] = useState<NotificationsDTO[]>([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+
+  // Obtener nivel del usuario (si user.level no existe, asumimos nivel 0)
+  const userLevel = user?.nivel || USER_LEVELS.BASE;
+
+  // Determinar qué pestañas debe ver el usuario según su nivel
+  const availableTabs = React.useMemo(() => {
+    const tabs: ActiveTab[] = ['notificaciones']; // Todos ven notificaciones
+    
+    // Nivel 1, 2 y Admin ven solicitudes
+    if (userLevel >= USER_LEVELS.INTERMEDIO) {
+      tabs.push('solicitudes');
+    }
+    
+    // Solo nivel 2 y Admin ven evaluaciones
+    if (userLevel >= USER_LEVELS.EXPERTO) {
+      tabs.push('evaluaciones');
+    }
+    
+    return tabs;
+  }, [userLevel]);
+
+  // Asegurar que la pestaña activa esté disponible para el usuario
+  useEffect(() => {
+    if (!availableTabs.includes(activeTab)) {
+      setActiveTab('notificaciones');
+    }
+  }, [availableTabs, activeTab]);
 
   // 🚀 Cargar notificaciones iniciales cuando se selecciona la pestaña de notificaciones
   useEffect(() => {
@@ -103,10 +139,13 @@ const NotificationsPanel: React.FC = () => {
     
     // Navegar según el tipo de notificación
     if (notificacion.tipo === 'Solicitud Publicacion' && publicacionId) {
-      setActiveTab('solicitudes');
-      setSelectedSolicitud(publicacionId);
-      setSolicitudesView('detail');
-      resetOtherStates('solicitudes');
+      // Verificar si el usuario tiene acceso a solicitudes
+      if (userLevel >= USER_LEVELS.INTERMEDIO) {
+        setActiveTab('solicitudes');
+        setSelectedSolicitud(publicacionId);
+        setSolicitudesView('detail');
+        resetOtherStates('solicitudes');
+      }
     } else if (publicacionId) {
       setSelectedPublicacion(publicacionId);
       setPublicacionView('detail');
@@ -130,8 +169,11 @@ const NotificationsPanel: React.FC = () => {
   };
 
   const handleTabChange = (tab: string) => {
-    setActiveTab(tab as ActiveTab);
-    resetAllStates();
+    // Verificar si el usuario tiene acceso a la pestaña seleccionada
+    if (availableTabs.includes(tab as ActiveTab)) {
+      setActiveTab(tab as ActiveTab);
+      resetAllStates();
+    }
   };
 
   const resetAllStates = () => {
@@ -225,6 +267,7 @@ const NotificationsPanel: React.FC = () => {
         activeTab={activeTab}
         unreadCount={unreadCount}
         onTabChange={handleTabChange}
+        availableTabs={availableTabs} // Pasar las pestañas disponibles
       />
       <div className="notifications-content">
         {renderContent()}

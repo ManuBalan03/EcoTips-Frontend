@@ -3,6 +3,9 @@ import DefaultLayout from "../components/layout/Defaultlayout";
 import { registerUser } from "../api/services/UserService";
 import { useNavigate } from "react-router-dom";
 import "./Form.css";
+import { Link } from "react-router-dom";
+
+<Link to="/signup">Regístrate aquí</Link>
 
 function Signup() {
   const navigate = useNavigate();

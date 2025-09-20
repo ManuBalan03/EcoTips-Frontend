@@ -21,28 +21,34 @@ function Login() {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
+
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
+  e.preventDefault();
+  setIsLoading(true);
+  setError("");
+  
+  try {
+    const response = await loginUser({
+      email: loginData.email,
+      password: loginData.password
+    });
     
-    try {
-      const response = await loginUser({
-        email: loginData.email,
-        password: loginData.password
-      });
-      
-      // Ahora usamos el contexto de autenticación
-      login(response.user, response.token);
-      
-      navigate("/Home"); // Asegúrate de que el path sea correcto
-    } catch (error) {
-      setError("Credenciales incorrectas. Por favor intenta de nuevo.");
-      console.error("Error al iniciar sesión:", error);
-    } finally {
-      setIsLoading(false);
+    login(response.user, response.token);
+    navigate("/Home");
+  } catch (error: any) {
+    // Mensaje más específico basado en el tipo de error
+    if (error.message.includes('Credenciales inválidas')) {
+      setError("Email o contraseña incorrectos");
+    } else if (error.message.includes('Usuario no encontrado')) {
+      setError("No existe una cuenta con este email");
+    } else {
+      setError("Error de conexión. Inténtalo más tarde");
     }
-  };
+    console.error("Error al iniciar sesión:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <DefaultLayout>

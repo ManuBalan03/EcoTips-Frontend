@@ -26,7 +26,7 @@ function DefaultLayout({children}: DefaultLayoutProps) {
                 <nav className="navbar">
                     <div className="logo-container">                      
                         <img className='logoimg' src={img} alt='logo'/> 
-                        <span className='TextLogo'><Link to="/" >EcoTips</Link></span>
+                        <span className='TextLogo'><Link to="/Home" >EcoTips</Link></span>
                     </div>
                     <div className="search-container">
                         <div className="search-bar">

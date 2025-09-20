@@ -28,7 +28,7 @@ export const UserPointsProvider: React.FC<{children: React.ReactNode}> = ({ chil
   
 
   const refreshPoints = async () => {
-    if (!user?.id || !token) return;
+    if (!user?.idUsuario || !token) return;
   
     try {
       // const Usuario = await obtenerUsuarioPorId(user.id, token);
@@ -50,7 +50,7 @@ export const UserPointsProvider: React.FC<{children: React.ReactNode}> = ({ chil
   // Opcional: Actualizar puntos automáticamente al montar
   useEffect(() => {
     refreshPoints();
-  }, [user?.id, token]);
+  }, [user?.idUsuario, token]);
 
   return (
     <UserPointsContext.Provider value={{ nivel,points, refreshPoints }}>

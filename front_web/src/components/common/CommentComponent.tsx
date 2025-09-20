@@ -1,17 +1,6 @@
-import { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "../../api/AuthContext";
-import {
-  obtenerComentariosPorPublicacion,
-  crearComentario
-} from "../../api/services/Publications/CommentServices";
-
-import {
-  eliminarReaccion,
-  contarReaccionesPorTipo, obtenerReaccionesPorPublicacion, agregarReaccion
-} from "../../api/services/Publications/ReactionsServices";
-
-
-import {  ComentarioDTO, ReactionsDTO} from "../../api/services/Publications/Types/PublicationType"
+import { useCommentSection } from "../../api/hooks/CommentSection/UseCommentSection";
 import './CommentSection.css';
 
 interface CommentSectionProps {
@@ -26,203 +15,43 @@ const CommentSection = ({
   onReactionUpdated
 }: CommentSectionProps) => {
   const { user, token } = useAuth();
-  const [comments, setComments] = useState<ComentarioDTO[]>([]);
-  const [reactions, setReactions] = useState<ReactionsDTO[]>([]);
-  const [reactionCounts, setReactionCounts] = useState<Record<string, number>>({});
-  const [newComment, setNewComment] = useState("");
-  const [showReactions, setShowReactions] = useState(false);
-  const [showComments, setShowComments] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [submittingComment, setSubmittingComment] = useState(false);
-  const [processingReaction, setProcessingReaction] = useState(false); // Para evitar múltiples clics
+  
+  const {
+    comentarios,
+    reactions,
+    reactionCounts,
+    newComment,
+    setNewComment,
+    showReactions,
+    setShowReactions,
+    showComments,
+    setShowComments,
+    loadingComentarios,
+    errorComentarios,
+    processingReaction,
+    loadInitialData,
+    handleSubmitComment,
+    handleReactionClick
+  } = useCommentSection(idPublicacion, token, user);
 
-  // Cargar comentarios, reacciones y conteos
+  // Cargar datos cuando cambien las dependencias
   useEffect(() => {
-    if (showComments) {
-      loadComments();
-    }
-    loadReactions();
-    loadReactionCounts();
-  }, [idPublicacion, showComments]);
+    loadInitialData();
+  }, [idPublicacion, showComments, loadInitialData]);
 
-  const loadComments = async () => {
-    if (!token) return;
-    setLoading(true);
-    try {
-      const comentarios = await obtenerComentariosPorPublicacion(idPublicacion, token);
-      setComments(comentarios);
-    } catch (error) {
-      console.error("Error cargando comentarios:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadReactions = async () => {
-    if (!token) return;
-    try {
-      const reacciones = await obtenerReaccionesPorPublicacion(idPublicacion, token);
-      setReactions(reacciones);
-    } catch (error) {
-      console.error("Error cargando reacciones:", error);
-    }
-  };
-
-  const loadReactionCounts = async () => {
-    if (!token) return;
-    try {
-      const conteos = await contarReaccionesPorTipo(idPublicacion, token);
-      setReactionCounts(conteos);
-    } catch (error) {
-      console.error("Error cargando conteo de reacciones:", error);
-    }
-  };
-
-  const handleSubmitComment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    console.log("Intentando enviar comentario..."); // Debug
-    console.log("Datos del usuario:", user); // Debug
-    console.log("Token disponible:", !!token); // Debug
-    console.log("Contenido del comentario:", newComment); // Debug
-    
-    if (!newComment.trim()) {
-      console.log("Comentario vacío");
-      return;
-    }
-    
-    if (!user?.idUsuario) {
-      console.log("Usuario no válido:", user);
-      return;
-    }
-    
-    if (!token) {
-      console.log("Token no disponible");
-      return;
-    }
-
-    setSubmittingComment(true);
-    
-    try {
-      console.log("Enviando comentario con datos:", {
-        idPublicacion,
-        idUsuario: user.idUsuario,
-        contenido: newComment.trim(),
-        nombreAutor: user.nombre
-      });
-      
-      const comentario = await crearComentario({
-        idPublicacion,
-        idUsuario: user.idUsuario,
-        contenido: newComment.trim(),
-        nombreAutor: user.nombre,
-        fotoPerfil: user.fotoPerfil
-      }, token);
-      
-      console.log("Comentario creado exitosamente:", comentario);
-      
-      // Actualizar la lista de comentarios
-      setComments(prevComments => [...prevComments, comentario]);
-      setNewComment("");
-      onCommentAdded?.();
-      
-      console.log("Estado actualizado correctamente");
-    } catch (error) {
-      console.error("Error detallado al agregar comentario:", error);
-      
-    } finally {
-      setSubmittingComment(false);
-    }
-  };
-
-  const handleReaction = async (tipo: string) => {
-    if (!user?.idUsuario || !token || processingReaction) return;
-    
-    setProcessingReaction(true);
-    
-    try {
-      console.log("=== DEBUG REACCIÓN ===");
-      console.log("Tipo de reacción:", tipo);
-      console.log("Usuario ID:", user.idUsuario);
-      console.log("ID Publicación:", idPublicacion);
-      
-      // Buscar si el usuario ya tiene una reacción en esta publicación
-      const reaccionExistente = reactions.find(r => r.idUsuario === user.idUsuario);
-      console.log("Reacción existente:", reaccionExistente);
-      
-      if (reaccionExistente) {
-        // Si ya tiene una reacción
-        if (reaccionExistente.Tipo === tipo) {
-          // Si es la misma reacción, eliminarla
-          console.log("Eliminando reacción existente del mismo tipo");
-          await eliminarReaccion(reaccionExistente.idReaccion!, token);
-          
-          // Actualizar estado local - remover la reacción del usuario
-          setReactions(prev => prev.filter(r => r.idUsuario !== user.idUsuario));
-          
-        } else {
-          // Si es diferente, actualizarla (eliminar la anterior y crear nueva)
-          console.log("Cambiando tipo de reacción");
-          await eliminarReaccion(reaccionExistente.idReaccion!, token);
-          
-          const nuevaReaccion = await agregarReaccion({
-            idPublicacion,
-            idUsuario: user.idUsuario,
-            Tipo: tipo,
-            nombreAutor: user.nombre
-          }, token);
-          
-          // Actualizar estado local - reemplazar la reacción del usuario
-          setReactions(prev => 
-            prev.map(r => r.idUsuario === user.idUsuario ? nuevaReaccion : r)
-          );
-        }
-      } else {
-        // No tiene reacción, crear nueva
-        console.log("Creando nueva reacción");
-        const nuevaReaccion = await agregarReaccion({
-          idPublicacion,
-          idUsuario: user.idUsuario,
-          Tipo: tipo,
-          nombreAutor: user.nombre
-        }, token);
-        
-        // Actualizar estado local - agregar nueva reacción
-        setReactions(prev => [...prev, nuevaReaccion]);
-      }
-      
-      // Recargar conteos para mantener sincronización
-      await loadReactionCounts();
-      onReactionUpdated?.();
-      
-      console.log("Reacción procesada exitosamente");
-      
-    } catch (error) {
-      console.error("Error procesando reacción:", error);
-      
-      // En caso de error, recargar todo para mantener consistencia
-      await loadReactions();
-      await loadReactionCounts();
-      
-      alert("Error al procesar reacción. Intenta nuevamente.");
-    } finally {
-      setProcessingReaction(false);
-    }
-  };
-
+  // Reacción types para UI
   const reactionTypes = [
     { type: "LIKE", emoji: "👍", label: "Me gusta" },
     { type: "ME_ENCANTA", emoji: "❤️", label: "Me encanta" },
     { type: "INTERESANTE", emoji: "😮", label: "Sorprendido" },
-    { type: "TRISTE", emoji: "😢", label: "Triste" }, // Corregido el typo TRSITE -> TRISTE
+    { type: "TRISTE", emoji: "😢", label: "Triste" },
   ];
 
   // Buscar la reacción actual del usuario
   const userReaction = reactions.find(r => r.idUsuario === user?.idUsuario);
   const totalReactions = Object.values(reactionCounts).reduce((a, b) => a + b, 0);
-  
-  // Buscar el tipo de reacción del usuario para mostrar el emoji correcto
-  const currentReactionType = userReaction ? reactionTypes.find(r => r.type === userReaction.Tipo) : null;
+  const currentReactionType = userReaction ? 
+    reactionTypes.find(r => r.type === userReaction.Tipo) : null;
 
   return (
     <div className="comment-section">
@@ -235,6 +64,7 @@ const CommentSection = ({
             </div>
           )}
         </div>
+        
         <div className="reaction-options">
           <button
             className={`reaction-button ${userReaction ? "active" : ""}`}
@@ -246,6 +76,7 @@ const CommentSection = ({
               {currentReactionType ? currentReactionType.label : "Me gusta"}
             </span>
           </button>
+          
           {showReactions && (
             <div className="reaction-picker">
               {reactionTypes.map(reaction => {
@@ -254,7 +85,9 @@ const CommentSection = ({
                   <button
                     key={reaction.type}
                     className={`reaction-option ${isSelected ? "selected" : ""}`}
-                    onClick={() => handleReaction(reaction.type)}
+                    onClick={() => handleReactionClick(reaction.type)
+                      .then(() => onReactionUpdated?.())
+                      .catch(() => {})}
                     title={`${reaction.label} (${reactionCounts[reaction.type] || 0})`}
                     disabled={processingReaction}
                   >
@@ -267,11 +100,12 @@ const CommentSection = ({
               })}
             </div>
           )}
+          
           <button 
             className="comment-button"
             onClick={() => setShowComments(!showComments)}
           >
-            💬 {comments.length > 0 ? comments.length : ''} Comentarios
+            💬 {comentarios.length > 0 ? comentarios.length : ''} Comentarios
           </button>
         </div>
       </div>
@@ -279,11 +113,13 @@ const CommentSection = ({
       {/* Lista de comentarios */}
       {showComments && (
         <>
-          {loading ? (
+          {loadingComentarios ? (
             <div className="loading-comments">Cargando comentarios...</div>
+          ) : errorComentarios ? (
+            <div className="error-comments">Error al cargar comentarios</div>
           ) : (
             <div className="comments-list">
-              {comments.map(comment => (
+              {comentarios.map(comment => (
                 <div key={comment.idcomentario || Math.random()} className="comment-item">
                   <div className="comment-avatar">
                     {comment.fotoPerfil ? (
@@ -316,33 +152,34 @@ const CommentSection = ({
           )}
 
           {/* Formulario para nuevo comentario */}
-          <form onSubmit={handleSubmitComment} className="comment-form">
+          <form onSubmit={(e) => handleSubmitComment(e)
+            .then(() => onCommentAdded?.())
+            .catch(() => {})} 
+            className="comment-form"
+          >
             <div className="comment-avatar">
-                             {user?.fotoPerfil ? (
-                      <img
-                        src={user?.fotoPerfil}
-                        alt="contenido"
-                        
-                      />
-                    ) : (
-                      user?.nombre?.charAt(0).toUpperCase() || 'U'
-                    )}
+              {user?.fotoPerfil ? (
+                <img src={user.fotoPerfil} alt="Avatar" />
+              ) : (
+                user?.nombre?.charAt(0).toUpperCase() || 'U'
+              )}
             </div>
+            
             <input
               type="text"
               value={newComment}
               onChange={e => setNewComment(e.target.value)}
               placeholder="Escribe un comentario..."
               className="comment-input"
-              disabled={submittingComment}
               required
             />
+            
             <button 
               type="submit" 
               className="comment-submit"
-              disabled={submittingComment || !newComment.trim()}
+              disabled={!newComment.trim()}
             >
-              {submittingComment ? "Enviando..." : "Publicar"}
+              Publicar
             </button>
           </form>
         </>

@@ -35,6 +35,9 @@ export interface PaginatedResponse<T> {
   content: T[];
   totalElements: number;
   totalPages: number;
-  size: number;
   number: number;
+  size: number;
+  first?: boolean;
+  last?: boolean;
+  empty?: boolean;
 }
