@@ -1,4 +1,4 @@
-import './nav.css';
+import './NavMainLayout.css';
 import { Link } from "react-router-dom";
 import img from "../../assets/img1.png";
 import { FiSearch } from "react-icons/fi";
@@ -14,7 +14,7 @@ interface DefaultLayoutProps {
     children: React.ReactNode;
 }
 
-function DefaultLayout({children}: DefaultLayoutProps) {
+function NavMainLayout({children}: DefaultLayoutProps) {
     const [activeNarvbar, setActiveNarvbar] = useState(false);
 
   function handleNarvbar() {
@@ -55,4 +55,4 @@ function DefaultLayout({children}: DefaultLayoutProps) {
     );
 }
 
-export default DefaultLayout;
+export default NavMainLayout;

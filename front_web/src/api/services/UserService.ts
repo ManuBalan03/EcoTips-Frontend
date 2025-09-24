@@ -41,6 +41,21 @@ export const loginUser = async (
   }
 };
 
+export const logoutUser = async (token: string): Promise<{ success: boolean; message: string }> => {
+  try {
+    const response = await api.post('/auth/logout', {}, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error: any) {
+    // Si el backend falla, igual procedemos con el logout en frontend
+    console.warn('Logout backend failed, proceeding with frontend cleanup:', error);
+    return { success: true, message: 'Sesión cerrada localmente' };
+  }
+};
+
 // ✅ Crear usuario
 export const crearUsuario = async (userData: UsuarioDTO): Promise<UsuarioDTO> => {
   try {

@@ -1,20 +1,18 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-// import './index.css'
+// main.tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Login from './routes/Login.tsx';
+import { AuthProvider } from './api/AuthContext';
+import { UserPointsProvider } from './context/UserPointsContext';
+import Login from './routes/Login';
 import Signup from './routes/Signup';
 import Home from './routes/Home/Home';
 import Notifications from './routes/Home/Home2';
-// import Dashboard from './routes/Dashboard.tsx';
-// import App from './App.tsx';                                                      
-import LandingPage from './components/pages/LandingPage.tsx';
-import  NotificationsPanel from './routes/Home/NotificationsSection.tsx';
-import PerfilSection from './routes/Home/PerfilSection/PerfilSection.tsx'
+import LandingPage from './components/pages/LandingPage';
+import NotificationsPanel from './routes/Home/NotificationsSection';
+import PerfilSection from './routes/Home/PerfilSection/PerfilSection';
+import RootLayout from './components/layout/RootLayout';
 
-// import ProtectedRoute from './routes/ProtectedRoute.tsx';
-import { AuthProvider } from './api/AuthContext'; // Importa el AuthProvider
-import { UserPointsProvider } from './context/UserPointsContext'; 
 const router = createBrowserRouter([
   {
     path: "/",
@@ -29,29 +27,36 @@ const router = createBrowserRouter([
     element: <Signup />,
   },
   {
-    path: "/Home",
-    element: <Home />,
-  },
-  {
-    path: "/notifications",
-    element: <Notifications />,
-  },
-    {
-    path: "/notificaciones",
-    element: <NotificationsPanel />,
-  },
-{
-  path: "/perfil",
-    element: <PerfilSection />,
-}
+    // Todas estas rutas usarán NavMainLayout via RootLayout
+    element: <RootLayout />,
+    children: [
+      {
+        path: "/Home",
+        element: <Home />, // Home NO incluye NavMainLayout
+      },
+      {
+        path: "/notifications",
+        element: <Notifications />,
+      },
+      {
+        path: "/notificaciones",
+        element: <NotificationsPanel />,
+      },
+      {
+        path: "/perfil",
+        element: <PerfilSection />,
+      }
+    ]
+  }
 ]);
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <AuthProvider> {/* Añade el AuthProvider aquí */}
+    <AuthProvider>
       <UserPointsProvider> 
-      <RouterProvider router={router} />
+        <RouterProvider router={router} />
       </UserPointsProvider> 
     </AuthProvider>
   </React.StrictMode>,
-)
+);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../../api/AuthContext";
-import DefaultLayout from "../../../components/layout/navbar";
+import DefaultLayout from "../../../components/layout/NavMainLayout";
 import UserPublicationsSection from "../../../components/common/PublicationsSection/PublicationsUser";
 import { PublicacionDTO } from "../../../api/services/Publications/Types/PublicationType";
 import { obtenerPublicacionesPorUsuario } from "../../../api/services/Publications/PublicationUsarioService";

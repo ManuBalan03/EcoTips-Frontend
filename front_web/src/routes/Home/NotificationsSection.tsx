@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useAuth } from "../../api/AuthContext";
-import DefaultLayout from "../../components/layout/navbar";
+import NavMainLayout from "../../components/layout/NavMainLayout";
 import UserCard from "../../components/home/userinfo";
 import  NotificationsPanel from "../../components/common/NotificationSection/NotificationsPanel";
 import "./Home.css";
@@ -12,7 +12,7 @@ function NotificationsSection() {
   // Si no hay usuario autenticado, mostramos un mensaje
   if (!isAuthenticated || !user) {
     return (
-      <DefaultLayout>
+      <NavMainLayout>
         <div className="home-container">
           <div className="message-container">
             <h2>No has iniciado sesión</h2>
@@ -20,12 +20,12 @@ function NotificationsSection() {
             <a href="/login" className="login-button">Iniciar Sesión</a>
           </div>
         </div>
-      </DefaultLayout>
+      </NavMainLayout>
     );
   }
 
   return (
-    <DefaultLayout>
+    <NavMainLayout>
       <div className="home-container">
         <div className="home-layout">
           {/* Columna izquierda: UserCard */}
@@ -47,7 +47,7 @@ function NotificationsSection() {
           </div>
         </div>
       </div>
-    </DefaultLayout>
+    </NavMainLayout>
   );
 }
 
