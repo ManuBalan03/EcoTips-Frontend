@@ -1,12 +1,14 @@
 export interface PublicacionDTO {
   id?: number;
   titulo: string;
-  contenido: string;
+  url_key: string;
   descripcion?: string;
   idUsuario: number;
   fechaCreacion?: string;
   nombreAutor?: string;
   estado?: string;
+
+    contenido_key?: string;
 }
 
 export interface ReactionsDTO {

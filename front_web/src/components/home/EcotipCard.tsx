@@ -5,6 +5,7 @@ import { useAuth } from "../../api/AuthContext";
 import EcoTipFormModal from "../../components/common/PublicationsSection/PublicationFormModal";
 import PublicationsList from "../../components/common/PublicationsSection/PublicationsList";
 import "./EcoTipCard.css";
+import {uploadImageToS3} from "../../api/services/s3Services";
 
 
 
@@ -29,18 +30,27 @@ const EcoTipsPage = () => {
     cargarPublicaciones();
   }, [token]);
 
-  const handleAddTip = async (nuevo: PublicacionDTO) => {
-    if (!token) return;
-    try {
-      const respuesta = await crearPublicacion(nuevo, token);
-      setTips([...tips, respuesta]);
-      setShowModal(false);
-    } catch (error) {
-      console.error("Error publicando tip:", error);
-      alert("No se pudo publicar el EcoTip.");
+ const handleAddTip = async (nuevo: PublicacionDTO, file?: File) => {
+  if (!token) return;
+  try {
+    // 📤 1. Si hay imagen, primero súbela a S3
+    if (file) {
+      const key = await uploadImageToS3(file, token);
+      console.log("key  ")
+      console.log(key)
+      nuevo.contenido_key = key;
     }
-  };
-  console.log("uff "+tips)
+
+    // 📝 2. Luego guarda la publicación con la key en la BD
+    const respuesta = await crearPublicacion(nuevo, token);
+    setTips([...tips, respuesta]);
+    setShowModal(false);
+  } catch (error) {
+    console.error("Error publicando tip:", error);
+    alert("No se pudo publicar el EcoTip.");
+  }
+};
+
 
   return (
     <div className="ecotips-container">

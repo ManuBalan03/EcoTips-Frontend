@@ -25,10 +25,10 @@ const EcoTipCard = ({ tip, user, onDelete, onEdit }: Props) => {
     <div className="tip-card">
       <h4>{tip.titulo}</h4>
 
-      {tip.contenido?.startsWith("http") ? (
-        <img src={tip.contenido} alt="EcoTip" className="tip-image" />
+      {tip.url_key?.startsWith("http") ? (
+        <img src={tip.url_key} alt="EcoTip" className="tip-image" crossOrigin="anonymous" />
       ) : (
-        <p className="tip-content">{tip.contenido}</p>
+        <p className="tip-content">{tip.url_key}</p>
       )}
 
       {tip.descripcion && (

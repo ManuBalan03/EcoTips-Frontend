@@ -213,9 +213,9 @@ const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, 
       
         <h4 className="publication-title">{publicacion.titulo}</h4>
 
-        {publicacion.contenido && (
+        {publicacion.url_key && (
             <img 
-              src={publicacion.contenido} 
+              src={publicacion.url_key} 
               alt={publicacion.titulo} 
               className="tip-image"
             />
