@@ -1,5 +1,4 @@
 // routes/Home/Home.tsx
-import React from "react";
 import { useAuth } from "../../api/AuthContext";
 import UserCard from "../../components/home/userinfo";
 import EcoTipsPage from "../../components/home/EcotipCard";

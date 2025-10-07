@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../api/AuthContext';
 
 import {
-  obtenerComentariosPorPublicacion,
-  crearComentario
+  obtenerComentariosPorPublicacion
 } from "../../../api/services/Publications/CommentServices";
 
 import {
-  contarReaccionesPorTipo, agregarReaccion
+  contarReaccionesPorTipo
 } from "../../../api/services/Publications/ReactionsServices";
 
 import {  ComentarioDTO, PublicacionDTO} from "../../../api/services/Publications/Types/PublicationType"
@@ -24,15 +23,14 @@ interface DetailsPublicationProps {
 }
 
 const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, onBack }) => {
-  const { user, token } = useAuth();
+  const {token } = useAuth();
   const [publicacion, setPublicacion] = useState<PublicacionDTO | null>(null);
   // const [publicacion, setPublicacion] = useState<PublicacionDTO []>([]);
-  const [comentarios, setComentarios] = useState<ComentarioDTO[]>([]);
-  const [nuevoComentario, setNuevoComentario] = useState('');
+  const [_comentarios, setComentarios] = useState<ComentarioDTO[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [reacciones, setReacciones] = useState<{[tipo: string]: number}>({});
-  const [miReaccion, setMiReaccion] = useState<string | null>(null);
+  const [_reacciones, setReacciones] = useState<{[tipo: string]: number}>({});
+
 
   // Cargar datos de la publicación
   useEffect(() => {
@@ -99,70 +97,70 @@ const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, 
     cargarDatos();
   }, [publicacionId, token]);
 
-  const handleEnviarComentario = async () => {
-    if (!user?.idUsuario || !token || !publicacionId || !nuevoComentario.trim()) return;
+  // const handleEnviarComentario = async () => {
+  //   if (!user?.idUsuario || !token || !publicacionId || !nuevoComentario.trim()) return;
     
-    try {
-      const comentarioData = {
-        idPublicacion: publicacionId,
-        idUsuario: user.idUsuario,
-        contenido: nuevoComentario,
-        nombreAutor: user.nombre,
-        fotoPerfil: user.fotoPerfil
-      };
+  //   try {
+  //     const comentarioData = {
+  //       idPublicacion: publicacionId,
+  //       idUsuario: user.idUsuario,
+  //       contenido: nuevoComentario,
+  //       nombreAutor: user.nombre,
+  //       fotoPerfil: user.fotoPerfil
+  //     };
 
-      const comentarioCreado = await crearComentario(comentarioData, token);
-      setComentarios(prev => [comentarioCreado, ...prev]);
-      setNuevoComentario('');
+  //     const comentarioCreado = await crearComentario(comentarioData, token);
+  //     setComentarios(prev => [comentarioCreado, ...prev]);
+  //     setNuevoComentario('');
       
-    } catch (err) {
-      console.error("Error al enviar comentario:", err);
-      setError("Error al enviar el comentario. Intente nuevamente.");
-    }
-  };
+  //   } catch (err) {
+  //     console.error("Error al enviar comentario:", err);
+  //     setError("Error al enviar el comentario. Intente nuevamente.");
+  //   }
+  // };
 
-  const handleReaccion = async (tipo: string) => {
-    if (!user?.idUsuario || !token || !publicacionId) return;
+  // const handleReaccion = async (tipo: string) => {
+  //   if (!user?.idUsuario || !token || !publicacionId) return;
     
-    try {
-      // Si ya reaccionó con este tipo, eliminar la reacción
-      if (miReaccion === tipo) {
-        // Necesitarías implementar un servicio para obtener el ID de la reacción del usuario
-        // await eliminarReaccion(reaccionId, token);
-        setReacciones(prev => ({
-          ...prev,
-          [tipo]: (prev[tipo] || 0) - 1
-        }));
-        setMiReaccion(null);
-      } 
-      // Si ya reaccionó pero con otro tipo, cambiar la reacción
-      else if (miReaccion) {
-        // Implementar lógica para cambiar reacción
-        setReacciones(prev => ({
-          ...prev,
-          [miReaccion]: (prev[miReaccion] || 0) - 1,
-          [tipo]: (prev[tipo] || 0) + 1
-        }));
-        setMiReaccion(tipo);
-      }
-      // Si no ha reaccionado, agregar nueva reacción
-      else {
-        await agregarReaccion({
-          idPublicacion: publicacionId,
-          idUsuario: user.idUsuario,
-          Tipo: tipo
-        }, token);
+  //   try {
+  //     // Si ya reaccionó con este tipo, eliminar la reacción
+  //     if (miReaccion === tipo) {
+  //       // Necesitarías implementar un servicio para obtener el ID de la reacción del usuario
+  //       // await eliminarReaccion(reaccionId, token);
+  //       setReacciones(prev => ({
+  //         ...prev,
+  //         [tipo]: (prev[tipo] || 0) - 1
+  //       }));
+  //       setMiReaccion(null);
+  //     } 
+  //     // Si ya reaccionó pero con otro tipo, cambiar la reacción
+  //     else if (miReaccion) {
+  //       // Implementar lógica para cambiar reacción
+  //       setReacciones(prev => ({
+  //         ...prev,
+  //         [miReaccion]: (prev[miReaccion] || 0) - 1,
+  //         [tipo]: (prev[tipo] || 0) + 1
+  //       }));
+  //       setMiReaccion(tipo);
+  //     }
+  //     // Si no ha reaccionado, agregar nueva reacción
+  //     else {
+  //       await agregarReaccion({
+  //         idPublicacion: publicacionId,
+  //         idUsuario: user.idUsuario,
+  //         Tipo: tipo
+  //       }, token);
         
-        setReacciones(prev => ({
-          ...prev,
-          [tipo]: (prev[tipo] || 0) + 1
-        }));
-        setMiReaccion(tipo);
-      }
-    } catch (err) {
-      console.error("Error al manejar reacción:", err);
-    }
-  };
+  //       setReacciones(prev => ({
+  //         ...prev,
+  //         [tipo]: (prev[tipo] || 0) + 1
+  //       }));
+  //       setMiReaccion(tipo);
+  //     }
+  //   } catch (err) {
+  //     console.error("Error al manejar reacción:", err);
+  //   }
+  // };
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return '';

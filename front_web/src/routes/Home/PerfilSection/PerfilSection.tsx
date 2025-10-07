@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../../api/AuthContext";
-import DefaultLayout from "../../../components/layout/NavMainLayout";
 import UserPublicationsSection from "../../../components/common/PublicationsSection/PublicationsUser";
 import { PublicacionDTO } from "../../../api/services/Publications/Types/PublicationType";
 import { obtenerPublicacionesPorUsuario } from "../../../api/services/Publications/PublicationUsarioService";
@@ -64,7 +63,6 @@ useEffect(() => {
 
   if (!isAuthenticated || !user) {
     return (
-      <DefaultLayout>
         <div className="home-container">
           <div className="message-container">
             <h2>No has iniciado sesión</h2>
@@ -72,24 +70,20 @@ useEffect(() => {
             <a href="/login" className="login-button">Iniciar Sesión</a>
           </div>
         </div>
-      </DefaultLayout>
     );
   }
 
   if (loading) {
     return (
-      <DefaultLayout>
         <div className="home-container">
           <div className="loading-message">
             <p>Cargando perfil...</p>
           </div>
         </div>
-      </DefaultLayout>
     );
   }
 
   return (
-    <DefaultLayout>
       <div className="home-container">
    
         
@@ -107,7 +101,6 @@ useEffect(() => {
           onEditPublication={handleEditPublication}
         />
       </div>
-    </DefaultLayout>
   );
 }
 

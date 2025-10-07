@@ -3,7 +3,6 @@ import './LandingPage.css'
 import { Link } from "react-router-dom";
 
 import img from "../../assets/img1.png";
-import PostCard from '../home/PostCard';
 
 interface DefaultLayoutProps {
   children: React.ReactNode;

@@ -1,12 +1,12 @@
 // api/AuthContext.tsx
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Usuario } from './types/UserTypes';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { UsuarioDTO } from './types/UserTypes';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: Usuario | null;
+  user: UsuarioDTO | null;
   token: string | null;
-  login: (user: Usuario, token: string) => void;
+  login: (user: UsuarioDTO, token: string) => void;
   logout: () => void;
 }
 
@@ -19,7 +19,7 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Intenta obtener el usuario y token almacenados al cargar la aplicación
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
-  const [user, setUser] = useState<Usuario | null>(null);
+  const [user, setUser] = useState<UsuarioDTO | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!token);
 
   // Cargar el usuario desde localStorage al iniciar
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  const login = (userData: Usuario, newToken: string) => {
+  const login = (userData: UsuarioDTO, newToken: string) => {
     setUser(userData);
     setToken(newToken);
     setIsAuthenticated(true);

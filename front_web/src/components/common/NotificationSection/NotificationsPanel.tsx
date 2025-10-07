@@ -1,9 +1,7 @@
 // components/NotificationsPanel.tsx
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../api/AuthContext';
-import { 
-  obtenerNotificacionesPorUsuario, 
+import {  
   marcarComoLeida, 
   NotificationsDTO,
   obtenerContadorNoLeidas,
@@ -40,7 +38,6 @@ const NotificationsPanel: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedPublicacion, setSelectedPublicacion] = useState<number | null>(null);
-  const navigate = useNavigate();
   const [evaluacionesView, setEvaluacionesView] = useState<'list' | 'detail'>('list');
   const [selectedEvaluacion, setSelectedEvaluacion] = useState<number | null>(null);
   const [unreadCount, setUnreadCount] = useState<number>(0);

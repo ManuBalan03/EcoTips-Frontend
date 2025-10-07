@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useAuth } from "../../api/AuthContext";
 import { useCommentSection } from "../../api/hooks/CommentSection/UseCommentSection";
 import './CommentSection.css';

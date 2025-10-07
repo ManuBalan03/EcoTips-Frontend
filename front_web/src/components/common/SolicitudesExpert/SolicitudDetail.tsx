@@ -68,7 +68,7 @@ const SolicitudDetail: React.FC<SolicitudDetailProps> = ({ solicitudId, onBack }
   }, [votoEnviado, onBack]);
 
   const handleEnviarVoto = async () => {
-    if (!user?.id || !token || !decision || submitting) return;
+    if (!user?.idUsuario || !token || !decision || submitting) return;
     
     setSubmitting(true);
     setError(null);
@@ -77,7 +77,7 @@ const SolicitudDetail: React.FC<SolicitudDetailProps> = ({ solicitudId, onBack }
       const votoData = {
         Voto: decision,
         Comentario: comentario,
-        idUsuario: user.id,
+        idUsuario: user.idUsuario,
         idPublicacion: solicitudId,
         nombreAutor: user.nombre,
         fotoPerfil: user.fotoPerfil

@@ -46,16 +46,7 @@ const EcoTipFormModal = ({ onClose, onPublish, user }: Props) => {
     setContenido(file.name); // O lo que necesites para tu backend
   };
 
-  // Simular subida de archivo (debes integrar con tu servicio real)
-  const uploadFile = async (file: File): Promise<string> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // Aquí iría tu lógica real de subida a AWS S3, Cloudinary, etc.
-        const fakeUrl = `https://tu-bucket.s3.amazonaws.com/${Date.now()}-${file.name}`;
-        resolve(fakeUrl);
-      }, 2000);
-    });
-  };
+  
 
  const handleSubmit = async () => {
   if (!user) return;

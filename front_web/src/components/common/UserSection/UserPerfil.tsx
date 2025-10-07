@@ -4,6 +4,7 @@ import EditProfileForm from "./UserEdit";
 import { actualizarDatosUsuario } from "../../../api/services/UserService";
 import "./UserPerfil.css";
 import { useAuth } from "../../../api/AuthContext";
+import { uploadImageToS3 } from "../../../api/services/s3Services"; 
 
 interface Usuario {
   idUsuario: number;
@@ -71,23 +72,34 @@ const UserPerfil: React.FC<UserPerfilProps> = ({
     }
   }, [usuarioProp, idUsuario, nombre, email, telefono, fotoPerfil, nivel, seguidores]);
 
-  const handleSave = async (data: Partial<Usuario>) => {
-    try {
-      console.log("ssssssssss")
-      console.log(usuario.idUsuario)
-      const updatedUser = await actualizarDatosUsuario(usuario.idUsuario, { ...usuario, ...data }, token || "");
-      setUsuario(updatedUser);
-      setEditing(false);
-    } catch (error) {
-      console.error("Error al guardar usuario:", error);
-      alert("Hubo un error al actualizar tu perfil.");
-    }
-  };
+ const handleSave = async (data: any) => {
+  try {
+    let updatedFotoPerfil = usuario.fotoPerfil;
 
-  // Si no hay datos de usuario, mostrar loading
-  if (!usuario.nombre) {
-    return <div className="loading">Cargando perfil...</div>;
+    // 📤 Si el usuario seleccionó una nueva imagen, súbela a S3
+    if (data.file) {
+      const key = await uploadImageToS3(data.file, token || "");
+      updatedFotoPerfil = key;
+    }
+
+    // 📝 Enviar al backend los nuevos datos del usuario
+    const updatedUser = await actualizarDatosUsuario(
+      usuario.idUsuario,
+      { 
+        ...usuario, 
+        ...data, 
+        fotoPerfil: updatedFotoPerfil 
+      },
+      token || ""
+    );
+
+    setUsuario(updatedUser);
+    setEditing(false);
+  } catch (error) {
+    console.error("Error al guardar usuario:", error);
+    alert("Hubo un error al actualizar tu perfil.");
   }
+};
 
   return (
     <div className="user-profile-wrapper">
