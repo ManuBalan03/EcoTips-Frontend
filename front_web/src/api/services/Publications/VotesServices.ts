@@ -2,6 +2,7 @@
 import axios from 'axios';
 
 const BASE_URL = 'http://localhost:8082/api/publicaciones';
+import {PublicacionDTO } from './Types/PublicationType';
 
 export interface VotosDTO {
   idVotos?: number;
@@ -14,16 +15,16 @@ export interface VotosDTO {
   fotoPerfil?: string;
 }
 
-interface Solicitud {
-  id: number;
-  titulo: string;
-  contenido: string;
-  descripcion?: string;
-  idUsuario: number;
-  fechaCreacion?: string;
-  nombreAutor?: string;
-  fotoPerfil?:string;
-}
+// interface Solicitud {
+//   id: number;
+//   titulo: string;
+//   contenido: string;
+//   descripcion?: string;
+//   idUsuario: number;
+//   fechaCreacion?: string;
+//   nombreAutor?: string;
+//   fotoPerfil?:string;
+// }
 
 export const obtenerVotosPorPublicacion = async (idPublicacion: number, token: string): Promise<VotosDTO[]> => {
   try {
@@ -55,22 +56,44 @@ export const enviarVoto = async (votoData: Omit<VotosDTO, 'idVotos' | 'fechaVoto
 };
 
 
-export const obtenerSolicitudesPendientes = async (token: string): Promise<Solicitud[]> => {
+export const obtenerSolicitudesPendientes = async (
+ token: string, 
+  estado: string = 'PENDIENTE', 
+  page: number = 0, 
+  size: number = 20
+): Promise<any> => {
   try {
-    const response = await axios.get(`${BASE_URL}/pendiente`, {
+    const response = await axios.get(BASE_URL, {
+      withCredentials: true,
+      params: {
+        estado,
+        page,
+        size
+      },
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
     });
-    return response.data;
+    
+    if (response.data && typeof response.data === 'object') {
+      return response.data;
+    }
+    
+    console.error('Formato de respuesta no reconocido:', response.data);
+    return { content: [], totalElements: 0, totalPages: 0 };
   } catch (error) {
-    console.error('Error al obtener solicitudes:', error);
-    return [];
+    console.error('Error al obtener publicaciones:', error);
+    if (axios.isAxiosError(error) && error.response) {
+      console.error('Estado de respuesta:', error.response.status);
+      console.error('Datos de respuesta:', error.response.data);
+    }
+    return { content: [], totalElements: 0, totalPages: 0 };
   }
 };
 
 // En tu archivo de servicios
-export const obtenerSolicitudPorId = async (id: number, token: string): Promise<Solicitud> => {
+export const obtenerSolicitudPorId = async (id: number, token: string): Promise<PublicacionDTO> => {
   const response = await fetch(`${BASE_URL}/${id}`, {
     headers: {
       'Authorization': `Bearer ${token}`

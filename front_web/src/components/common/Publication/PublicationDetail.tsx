@@ -1,21 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../../api/AuthContext';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../../../api/AuthContext";
 
 import {
-  obtenerComentariosPorPublicacion
+  obtenerComentariosPorPublicacion,
 } from "../../../api/services/Publications/CommentServices";
 
 import {
-  contarReaccionesPorTipo
+  contarReaccionesPorTipo,
 } from "../../../api/services/Publications/ReactionsServices";
 
-import {  ComentarioDTO, PublicacionDTO} from "../../../api/services/Publications/Types/PublicationType"
+import {
+  obtenerPublicacionPorId,
+} from "../../../api/services/Publications/PublicacionesService";
 
-import '../../home/EcoTipCard.css';
-import './Publication.css';
+import { ComentarioDTO, PublicacionDTO } from "../../../api/services/Publications/Types/PublicationType";
 
-import CommentSection  from '../CommentComponent';
-import '../CommentComponent'
+import "../../home/EcoTipCard.css";
+import "./Publication.css";
+
+import CommentSection from "../CommentComponent";
 
 interface DetailsPublicationProps {
   publicacionId: number;
@@ -23,48 +26,31 @@ interface DetailsPublicationProps {
 }
 
 const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, onBack }) => {
-  const {token } = useAuth();
+  const { token } = useAuth();
   const [publicacion, setPublicacion] = useState<PublicacionDTO | null>(null);
-  // const [publicacion, setPublicacion] = useState<PublicacionDTO []>([]);
-  const [_comentarios, setComentarios] = useState<ComentarioDTO[]>([]);
+  const [comentarios, setComentarios] = useState<ComentarioDTO[]>([]);
+  const [reacciones, setReacciones] = useState<{ [tipo: string]: number }>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [_reacciones, setReacciones] = useState<{[tipo: string]: number}>({});
-
 
   // Cargar datos de la publicación
   useEffect(() => {
     const cargarDatos = async () => {
       if (!token || !publicacionId) {
-        setError('No hay token o ID de publicación');
+        setError("No hay token o ID de publicación");
         return;
       }
-      
+
       setLoading(true);
       setError(null);
-      
+
       try {
-        // 1. Obtener publicación
-        const pubResponse = await fetch(`http://localhost:8082/api/publicaciones/${publicacionId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!pubResponse.ok) {
-          throw new Error(`Error al obtener publicación: ${pubResponse.status}`);
-        }
-
-        const pubData = await pubResponse.json();
+        // 1️⃣ Obtener publicación desde servicio centralizado
+        const pubData = await obtenerPublicacionPorId(publicacionId, token);
         
-        if (!pubData) {
-          throw new Error('No se recibieron datos de la publicación');
-        }
-
         setPublicacion(pubData);
 
-        // 2. Obtener comentarios
+        // 2️⃣ Obtener comentarios
         try {
           const comentariosData = await obtenerComentariosPorPublicacion(publicacionId, token);
           setComentarios(comentariosData || []);
@@ -73,7 +59,7 @@ const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, 
           setComentarios([]);
         }
 
-        // 3. Obtener reacciones
+        // 3️⃣ Obtener reacciones
         try {
           const reaccionesData = await contarReaccionesPorTipo(publicacionId, token);
           setReacciones(reaccionesData || {});
@@ -82,13 +68,10 @@ const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, 
           setReacciones({});
         }
 
-        // 4. Obtener reacción del usuario actual (si existe)
-        // Implementar según tu API
-
       } catch (err) {
-        console.error("Error en cargarDatos:", err);
-       
+        console.error("❌ Error en cargarDatos:", err);
         setPublicacion(null);
+        setError("No se pudo cargar la publicación");
       } finally {
         setLoading(false);
       }
@@ -97,80 +80,15 @@ const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, 
     cargarDatos();
   }, [publicacionId, token]);
 
-  // const handleEnviarComentario = async () => {
-  //   if (!user?.idUsuario || !token || !publicacionId || !nuevoComentario.trim()) return;
-    
-  //   try {
-  //     const comentarioData = {
-  //       idPublicacion: publicacionId,
-  //       idUsuario: user.idUsuario,
-  //       contenido: nuevoComentario,
-  //       nombreAutor: user.nombre,
-  //       fotoPerfil: user.fotoPerfil
-  //     };
-
-  //     const comentarioCreado = await crearComentario(comentarioData, token);
-  //     setComentarios(prev => [comentarioCreado, ...prev]);
-  //     setNuevoComentario('');
-      
-  //   } catch (err) {
-  //     console.error("Error al enviar comentario:", err);
-  //     setError("Error al enviar el comentario. Intente nuevamente.");
-  //   }
-  // };
-
-  // const handleReaccion = async (tipo: string) => {
-  //   if (!user?.idUsuario || !token || !publicacionId) return;
-    
-  //   try {
-  //     // Si ya reaccionó con este tipo, eliminar la reacción
-  //     if (miReaccion === tipo) {
-  //       // Necesitarías implementar un servicio para obtener el ID de la reacción del usuario
-  //       // await eliminarReaccion(reaccionId, token);
-  //       setReacciones(prev => ({
-  //         ...prev,
-  //         [tipo]: (prev[tipo] || 0) - 1
-  //       }));
-  //       setMiReaccion(null);
-  //     } 
-  //     // Si ya reaccionó pero con otro tipo, cambiar la reacción
-  //     else if (miReaccion) {
-  //       // Implementar lógica para cambiar reacción
-  //       setReacciones(prev => ({
-  //         ...prev,
-  //         [miReaccion]: (prev[miReaccion] || 0) - 1,
-  //         [tipo]: (prev[tipo] || 0) + 1
-  //       }));
-  //       setMiReaccion(tipo);
-  //     }
-  //     // Si no ha reaccionado, agregar nueva reacción
-  //     else {
-  //       await agregarReaccion({
-  //         idPublicacion: publicacionId,
-  //         idUsuario: user.idUsuario,
-  //         Tipo: tipo
-  //       }, token);
-        
-  //       setReacciones(prev => ({
-  //         ...prev,
-  //         [tipo]: (prev[tipo] || 0) + 1
-  //       }));
-  //       setMiReaccion(tipo);
-  //     }
-  //   } catch (err) {
-  //     console.error("Error al manejar reacción:", err);
-  //   }
-  // };
-
   const formatDate = (dateString?: string) => {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toLocaleString('es-ES', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return date.toLocaleString("es-ES", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -208,51 +126,37 @@ const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, 
         </button>
       )}
 
-      
-        <h4 className="publication-title">{publicacion.titulo}</h4>
+      <h4 className="publication-title">{publicacion.titulo}</h4>
 
-        {publicacion.url_key && (
-            <img 
-              src={publicacion.url_key} 
-              alt={publicacion.titulo} 
-              className="tip-image"
-            />
-        )}
-        
+      {publicacion.url_key && (
+        <img
+          src={publicacion.url_key}
+          alt={publicacion.titulo}
+          className="tip-image"
+        />
+      )}
 
-         <div className="tags-container">
+      <div className="tags-container">
         {publicacion.descripcion && (
           <span className="tag">{publicacion.descripcion}</span>
         )}
-        
-        
       </div>
-        <div className="publication-meta">
-          <span className="author-info">Publicado por: {publicacion.nombreAutor || 'admin'}</span>
-          {publicacion.fechaCreacion && (
-            <span className="date">{formatDate(publicacion.fechaCreacion)}</span>
-          )}
-        </div>
-    
 
-     
+      <div className="publication-meta">
+        <span className="author-info">
+          Publicado por: {publicacion.nombreAutor || "admin"}
+        </span>
+        {publicacion.fechaCreacion && (
+          <span className="date">{formatDate(publicacion.fechaCreacion)}</span>
+        )}
+      </div>
 
-
-
-      
-
-
-<CommentSection 
-  idPublicacion={publicacion?.id ?? 0} // Usa 0 o un valor por defecto
-  onCommentAdded={() => console.log("Comentario agregado")}
-  onReactionUpdated={() => console.log("Reacción actualizada")}
-/>
-
-  
+      <CommentSection
+        idPublicacion={publicacion.id ?? 0}
+        onCommentAdded={() => console.log("Comentario agregado")}
+        onReactionUpdated={() => console.log("Reacción actualizada")}
+      />
     </div>
-
-                    
-
   );
 };
 

@@ -8,17 +8,20 @@ import {
 } from '../../../api/services/Publications/VotesServices';
 import './solicitud.css';
 
-interface Solicitud {
-  id: number;
-  titulo: string;
-  contenido: string;
-  descripcion?: string;
-  idUsuario: number;
-  fechaCreacion?: string;
-  nombreAutor?: string;
-  fotoPerfil?: string;
-  estado?: string;
-}
+import { PublicacionDTO } from "../../../api/services/Publications/Types/PublicationType";
+
+
+// interface Solicitud {
+//   id: number;
+//   titulo: string;
+//   contenido: string;
+//   descripcion?: string;
+//   idUsuario: number;
+//   fechaCreacion?: string;
+//   nombreAutor?: string;
+//   fotoPerfil?: string;
+//   estado?: string;
+// }
 
 interface SolicitudDetailProps {
   solicitudId: number;
@@ -27,7 +30,7 @@ interface SolicitudDetailProps {
 
 const SolicitudDetail: React.FC<SolicitudDetailProps> = ({ solicitudId, onBack }) => {
   const { user, token } = useAuth();
-  const [solicitud, setSolicitud] = useState<Solicitud | null>(null);
+  const [publicacion, setPublicacion] = useState<PublicacionDTO | null>(null);
   const [votos, setVotos] = useState<VotosDTO[]>([]);
   const [comentario, setComentario] = useState('');
   const [decision, setDecision] = useState<'ACUERDO' | 'EN_DESACUERDO' | null>(null);
@@ -45,7 +48,7 @@ const SolicitudDetail: React.FC<SolicitudDetailProps> = ({ solicitudId, onBack }
       
       try {
         const solicitudData = await obtenerSolicitudPorId(solicitudId, token);
-        setSolicitud(solicitudData);
+        setPublicacion(solicitudData);
         
         const votosData = await obtenerVotosPorPublicacion(solicitudId, token);
         setVotos(votosData);
@@ -133,7 +136,7 @@ const SolicitudDetail: React.FC<SolicitudDetailProps> = ({ solicitudId, onBack }
     );
   }
 
-  if (!solicitud) {
+  if (!publicacion) {
     return (
       <div className="empty-message">
         No se encontró la solicitud solicitada
@@ -149,30 +152,30 @@ const SolicitudDetail: React.FC<SolicitudDetailProps> = ({ solicitudId, onBack }
       
       <div className="solicitud-header">
         <div className="solicitud-avatar">
-          {solicitud.fotoPerfil ? (
-            <img src={solicitud.fotoPerfil} alt={solicitud.nombreAutor || 'Autor'} />
+          {publicacion.fotoPerfil ? (
+            <img src={publicacion.fotoPerfil} alt={publicacion.nombreAutor || 'Autor'} />
           ) : (
             <div className="avatar-initial">
-              {obtenerIniciales(solicitud.nombreAutor)}
+              {obtenerIniciales(publicacion.nombreAutor)}
             </div>
           )}
         </div>
         <div className="solicitud-meta">
-          <h2>{solicitud.titulo}</h2>
-          <p className="solicitud-author">{solicitud.nombreAutor || 'Usuario'}</p>
-          <p className="solicitud-date">{formatDate(solicitud.fechaCreacion)}</p>
+          <h2>{publicacion.titulo}</h2>
+          <p className="solicitud-author">{publicacion.nombreAutor || 'Usuario'}</p>
+          <p className="solicitud-date">{formatDate(publicacion.fechaCreacion)}</p>
         </div>
       </div>
       
       <div className="solicitud-content">
         <h3>Descripción</h3>
-        <p>{solicitud.descripcion || 'Sin descripción'}</p>
+        <p>{publicacion.descripcion || 'Sin descripción'}</p>
         
-        {solicitud.contenido && (
+        {publicacion.url_key && (
           <>
             <h3>Contenido</h3>
             <div className="solicitud-image-container">
-              <img src={solicitud.contenido} alt="Contenido de la publicación" />
+              <img src={publicacion.url_key} alt="Contenido de la publicación" />
             </div>
           </>
         )}

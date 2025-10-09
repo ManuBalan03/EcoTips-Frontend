@@ -10,12 +10,11 @@ interface UserCardProps {
 }
 const UserCard: React.FC<UserCardProps> = ({ nombre, fotoPerfil}) => {
   const { nivel ,points } = useUserPoints();
-  console.log(nivel)
-  console.log("llllll")
+
   const xp = points || 0; 
   const nextLevelXp = 100;
   const porcentaje = Math.min((xp % 100) / nextLevelXp * 100, 100);
-  console.log(porcentaje)
+
   return (
     <div className="user-card">
       <div className="user-card-header" />

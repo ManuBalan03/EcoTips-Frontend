@@ -17,8 +17,6 @@ const UserPublicationsSection: React.FC<UserPublicationsSectionProps> = ({
   onDeletePublication,
   onEditPublication
 }) => {
-  console.log(user.idUsuario)
-  console.log("dadad")
   return (
     <div className="user-publications-container">
       {/* Sección de información del usuario */}

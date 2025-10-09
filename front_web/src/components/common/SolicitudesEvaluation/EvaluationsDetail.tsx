@@ -5,21 +5,11 @@ import { obtenerVotosPorPublicacion, VotosDTO } from "../../../api/services/Publ
 import { obtenerPublicacionPorId } from "../../../api/services/Publications/PublicacionesService";
 import { useUserPoints } from "../../../context/UserPointsContext";
 import "./Evaluation.css";
+import { PublicacionDTO } from "../../../api/services/Publications/Types/PublicationType";
 
 interface EvaluacionDetailProps {
   evaluacionId: number;
   onBack: () => void;
-}
-
-interface PublicacionDTO {
-  id: number;
-  titulo: string;
-  contenido?: string;
-  descripcion?: string;
-  estado?: string;
-  fechaCreacion?: string;
-  nombreAutor?: string;
-  fotoPerfil?: string;
 }
 
 type Veredicto = "APROBADA" | "RECHAZADA" | "MODIFICACION";
@@ -71,7 +61,7 @@ const EvaluacionDetail: React.FC<EvaluacionDetailProps> = ({ evaluacionId, onBac
       await crearEvaluacion({
         veredicto,
         comentario_final: comentario,
-        idpublicacion: publicacion.id,
+        idpublicacion: publicacion.id || 0,
         idUsuario: user.idUsuario,
         nombreAutor: user.nombre,
         fotoPerfil: user.fotoPerfil,
@@ -127,7 +117,7 @@ const EvaluacionDetail: React.FC<EvaluacionDetailProps> = ({ evaluacionId, onBac
 
         <section className="content-section">
           <h2>Contenido</h2>
-          {publicacion.contenido ? <div className="content-display"><img src={publicacion.contenido} alt="Contenido" /></div> :
+          {publicacion.url_key ? <div className="content-display"><img src={publicacion.url_key} alt="Contenido" /></div> :
             <p>No hay contenido adjunto</p>}
         </section>
 
