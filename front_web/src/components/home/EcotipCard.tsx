@@ -73,7 +73,7 @@ const EcoTipsPage = () => {
       <hr />
 
       {/* 🧠 Lista de publicaciones con scroll infinito */}
-      <PublicationsList tips={tips} user={user} />
+      <PublicationsList publicaciones={tips} user={user} />
 
       {/* Loader / Error / Load more */}
       {loading && <p>Cargando...</p>}

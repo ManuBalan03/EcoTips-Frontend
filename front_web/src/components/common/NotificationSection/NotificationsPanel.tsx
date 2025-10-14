@@ -1,5 +1,5 @@
 // components/NotificationsPanel.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../../../api/AuthContext';
 import {
   marcarComoLeida,
@@ -17,8 +17,16 @@ import NotificationsNav from '../NotificationSection/NotificationsNav';
 import { useInfiniteScroll } from '../../../api/hooks/useInfiniteScroll';
 import './NotificationsPanel.css';
 
-// Definir tipos
+// Tipos
 export type ActiveTab = 'notificaciones' | 'solicitudes' | 'evaluaciones' | 'publicacion';
+
+// Niveles de usuario
+const USER_LEVELS = {
+  BASE: "nivel 0",        // nivel 0
+  INTERMEDIO: "nivel 1",  // nivel 1
+  EXPERTO: "nivel 2",     // nivel 2
+  ADMIN: "admin",       // admin
+};
 
 const NotificationsPanel: React.FC = () => {
   const { user, token } = useAuth();
@@ -42,14 +50,14 @@ const NotificationsPanel: React.FC = () => {
     hasMore,
     loadMore
   } = useInfiniteScroll<NotificationsDTO>(
-  async (page, size) => {
-    if (!user?.idUsuario || !token) return { content: [], totalPages: 0, totalElements: 0 };
-    const data = await obtenerNotificacionesPaginadas(user.idUsuario, { page, size }, token);
-    return { content: data.content, totalPages: data.totalPages ?? 0, totalElements: data.totalElements ?? 0 };
-  },
-  5, // page size
-  { idField: 'idNotificacion' } // <- aquí le dices cuál propiedad usar como id
-);
+    async (page, size) => {
+      if (!user?.idUsuario || !token) return { content: [], totalPages: 0, totalElements: 0 };
+      const data = await obtenerNotificacionesPaginadas(user.idUsuario, { page, size }, token);
+      return { content: data.content, totalPages: data.totalPages ?? 0, totalElements: data.totalElements ?? 0 };
+    },
+    5,
+    { idField: 'idNotificacion' }
+  );
 
   // 🔄 Contador de no leídas
   useEffect(() => {
@@ -65,29 +73,52 @@ const NotificationsPanel: React.FC = () => {
     fetchUnread();
   }, [user, token]);
 
+  // 🔐 Nivel del usuario (por defecto 0 si no existe)
+  const userLevel = user?.nivel ?? USER_LEVELS.BASE;
+
+  // 🧭 Pestañas visibles según el nivel
+  const availableTabs = useMemo(() => {
+    const tabs: ActiveTab[] = ['notificaciones'];
+    if (userLevel >= USER_LEVELS.INTERMEDIO) tabs.push('solicitudes');
+    if (userLevel >= USER_LEVELS.EXPERTO) tabs.push('evaluaciones');
+    return tabs;
+  }, [userLevel]);
+
+  // ⚙️ Evita mostrar pestañas que el usuario no debería ver
+  useEffect(() => {
+    if (!availableTabs.includes(activeTab)) {
+      setActiveTab('notificaciones');
+    }
+  }, [availableTabs, activeTab]);
+
+  // 🔔 Manejar clic en notificación
   const handleNotificationClick = async (notificacion: NotificationsDTO) => {
     if (!user?.idUsuario || !token) return;
+
     const notificationId = notificacion.idNotificacion;
     const publicacionId = notificacion.idPublicacion;
-
     if (!notificationId) return;
 
     if (!notificacion.leido) {
       await marcarComoLeida(notificationId, token);
-      // actualizar estado local
     }
 
-    // Navegación según tipo...
+    // Navegación según tipo de notificación
     if (notificacion.tipo === 'Solicitud Publicacion' && publicacionId) {
-      setActiveTab('solicitudes');
-      setSelectedSolicitud(publicacionId);
-      setSolicitudesView('detail');
+      if (userLevel >= USER_LEVELS.INTERMEDIO) {
+        setActiveTab('solicitudes');
+        setSelectedSolicitud(publicacionId);
+        setSolicitudesView('detail');
+      } else {
+        alert('No tienes acceso a las solicitudes.');
+      }
     } else if (publicacionId) {
       setSelectedPublicacion(publicacionId);
       setPublicacionView('detail');
     }
   };
 
+  // 🧩 Renderizar contenido según pestaña
   const renderContent = () => {
     if (activeTab === 'notificaciones') {
       if (publicacionView === 'detail' && selectedPublicacion !== null) {
@@ -115,6 +146,7 @@ const NotificationsPanel: React.FC = () => {
     }
 
     if (activeTab === 'solicitudes') {
+      if (userLevel < USER_LEVELS.INTERMEDIO) return <p>No tienes acceso a solicitudes.</p>;
       return solicitudesView === 'detail' && selectedSolicitud ? (
         <SolicitudDetail
           solicitudId={selectedSolicitud}
@@ -132,6 +164,7 @@ const NotificationsPanel: React.FC = () => {
     }
 
     if (activeTab === 'evaluaciones') {
+      if (userLevel < USER_LEVELS.EXPERTO) return <p>No tienes acceso a evaluaciones.</p>;
       return evaluacionesView === 'detail' && selectedEvaluacion ? (
         <EvaluacionDetail
           evaluacionId={selectedEvaluacion}
@@ -151,13 +184,12 @@ const NotificationsPanel: React.FC = () => {
 
   return (
     <div className="notifications-container">
-     <NotificationsNav
-  activeTab={activeTab}
-  unreadCount={unreadCount}
-  onTabChange={(tab) => setActiveTab(tab as ActiveTab)}
-  availableTabs={['notificaciones', 'solicitudes', 'evaluaciones']}
-/>
-
+      <NotificationsNav
+        activeTab={activeTab}
+        unreadCount={unreadCount}
+        onTabChange={(tab) => setActiveTab(tab as ActiveTab)}
+        availableTabs={availableTabs} // ✅ Solo muestra las pestañas permitidas
+      />
       <div className="notifications-content">{renderContent()}</div>
     </div>
   );

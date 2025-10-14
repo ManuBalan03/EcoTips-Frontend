@@ -6,7 +6,14 @@
   padding: 1rem;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   max-width: 300px;
-  margin: 0 auto;
+
+
+  width: calc(25vw - 20px); /* 1fr de 1fr+2fr+1fr → 25% del ancho total */
+
+  position: fixed;
+  top: 50%;
+  left: calc((25vw - 300px) / 2); /* Centrar horizontalmente dentro del primer 1fr */
+  transform: translateY(-50%);
 }
 
 .user-card-header {

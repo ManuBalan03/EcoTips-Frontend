@@ -2,25 +2,25 @@ import { PublicacionDTO } from "../../../api/services/Publications/Types/Publica
 import EcoTipCard from "./PublicationCard";
 
 interface Props {
-  tips: PublicacionDTO[];
+  publicaciones: PublicacionDTO[];
   user: any;
 onDelete?: (id: number) => void;  // Añade el parámetro number
   onEdit?: (id: number) => void; 
 }
 
-const PublicationList = ({ tips, user, onDelete, onEdit }: Props) => {
-  if (!tips.length) return <p>No se encontraron publicaciones.</p>;
-console.log("aaa  " +tips)
+const PublicationList = ({ publicaciones, user, onDelete, onEdit }: Props) => {
+  if (!publicaciones.length) return <p>No se encontraron publicaciones.</p>;
+
 
 return (
     <div className="tips-list">
-      {tips.map((tip) => (
+      {publicaciones.map((publicacion) => (
         <EcoTipCard 
-          key={tip.id} 
-          tip={tip} 
+          key={publicacion.id} 
+          tip={publicacion} 
           user={user}
-          onDelete={onDelete ? () => onDelete(tip.id!) : undefined}
-          onEdit={onEdit ? () => onEdit(tip.id!) : undefined}
+          onDelete={onDelete ? () => onDelete(publicacion.id!) : undefined}
+          onEdit={onEdit ? () => onEdit(publicacion.id!) : undefined}
         />
       ))}
     </div>

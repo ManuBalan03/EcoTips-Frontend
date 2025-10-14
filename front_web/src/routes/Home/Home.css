@@ -8,13 +8,14 @@
   /* max-width: 1200px; */
   margin: 0 auto;
   padding: 20px 0;
+  
 
 }
 
 .home-layout {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
-
+  margin-top:132px ;
 }
 
 /* Para pantallas más pequeñas, cambiamos a una columna */

@@ -40,7 +40,8 @@ const UserPerfil: React.FC<UserPerfilProps> = ({
   const { points } = useUserPoints();
   const xp = points || 0;
   const [editing, setEditing] = useState(false);
-  const { token } = useAuth();
+  const { updateUser, token } = useAuth();
+
 
   // Crear objeto usuario a partir de props individuales o del objeto completo
   const initialUsuario = usuarioProp || {
@@ -72,6 +73,8 @@ const UserPerfil: React.FC<UserPerfilProps> = ({
     }
   }, [usuarioProp, idUsuario, nombre, email, telefono, fotoPerfil, nivel, seguidores]);
 
+
+  
  const handleSave = async (data: any) => {
   try {
     let updatedFotoPerfil = usuario.fotoPerfil;
@@ -92,6 +95,10 @@ const UserPerfil: React.FC<UserPerfilProps> = ({
       },
       token || ""
     );
+
+
+// Actualizar Context para que otros componentes se enteren
+updateUser(updatedUser);
 
     setUsuario(updatedUser);
     setEditing(false);

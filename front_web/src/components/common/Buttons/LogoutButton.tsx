@@ -68,7 +68,7 @@ const LogoutLink: React.FC<LogoutLinkProps> = ({
       onClick={handleLogout}
       className={`logout-link logout-link--${variant} ${className} ${isLoggingOut ? 'logout-link--loading' : ''}`}
     >
-      {isLoggingOut ? '🔄 Cerrando...' : '🚪 Cerrar Sesión'}
+      {isLoggingOut ? '🔄 Cerrando...' : ' Cerrar Sesión'}
     </a>
   );
 };

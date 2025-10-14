@@ -8,6 +8,7 @@ interface AuthContextType {
   token: string | null;
   login: (user: UsuarioDTO, token: string) => void;
   logout: () => void;
+    updateUser: (newUser: UsuarioDTO) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,6 +35,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
     }
   }, []);
+const updateUser = (newUser: UsuarioDTO) => {
+  setUser(newUser);
+  localStorage.setItem('user', JSON.stringify(newUser));
+};
 
   const login = (userData: UsuarioDTO, newToken: string) => {
     setUser(userData);
@@ -59,7 +64,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       user,
       token,
       login,
-      logout
+      logout,
+      updateUser
     }}>
       {children}
     </AuthContext.Provider>

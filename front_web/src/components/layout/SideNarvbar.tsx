@@ -6,10 +6,7 @@ import LogoutLink from '../common/Buttons/LogoutButton';
 const SideNarvbar = () => {
   return (
     <div className="narvbar-lateral">
-      <ul>
-          <li>
-              <LogoutLink variant="text" />
-          </li>
+      <ul className='actions-user'>
         <li>
           <Link to="/perfil" className="ruta">Perfil</Link>
         </li>
@@ -19,6 +16,12 @@ const SideNarvbar = () => {
         <li>
           <Link to="/map" className="ruta">Centros de reciclaje</Link>
         </li>
+        
+      </ul>
+
+
+      <ul>
+        <li><LogoutLink variant="text" /></li>
       </ul>
     </div>
   )
