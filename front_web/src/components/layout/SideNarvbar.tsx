@@ -1,14 +1,14 @@
 
 import { Link } from 'react-router-dom';
 import '../layout/SideNarvbar.css'
-import LogoutButton from '../common/Buttons/LogoutButton';
+import LogoutLink from '../common/Buttons/LogoutButton';
 
 const SideNarvbar = () => {
   return (
     <div className="narvbar-lateral">
       <ul>
           <li>
-              <LogoutButton variant="text" />
+              <LogoutLink variant="text" />
           </li>
         <li>
           <Link to="/perfil" className="ruta">Perfil</Link>

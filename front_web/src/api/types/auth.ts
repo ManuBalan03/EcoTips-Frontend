@@ -4,9 +4,10 @@ export interface EcoTip {
   nombre: string;
   email: string;
   puntos_totales: number;
-  foto_perfil: string;
+  // foto_perfil: string;
   nivel:string;
   telefono?:string;
+  urlkey?:string;
 }
 
 export interface LoginResponse {
