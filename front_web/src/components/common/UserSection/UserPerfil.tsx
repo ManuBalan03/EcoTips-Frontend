@@ -4,20 +4,11 @@ import EditProfileForm from "./UserEdit";
 import { actualizarDatosUsuario } from "../../../api/services/UserService";
 import "./UserPerfil.css";
 import { useAuth } from "../../../api/AuthContext";
-import { uploadImageToS3 } from "../../../api/services/s3Services"; 
-
-interface Usuario {
-  idUsuario: number;
-  nombre: string;
-  email: string;
-  telefono?: string;
-  fotoPerfil?: string;
-  nivel: string;
-  seguidores?: number;
-}
+import { obtenerUrlImagen, uploadImageToS3 } from "../../../api/services/s3Services";
+import { UsuarioDTO } from "../../../api/types/UserTypes";
 
 interface UserPerfilProps {
-  usuario?: Usuario;
+  usuario?: UsuarioDTO;
   idUsuario?: number;
   nombre?: string;
   email?: string;
@@ -40,11 +31,10 @@ const UserPerfil: React.FC<UserPerfilProps> = ({
   const { points } = useUserPoints();
   const xp = points || 0;
   const [editing, setEditing] = useState(false);
-  const { updateUser, token } = useAuth();
+  const { user, updateUser, token } = useAuth();
 
-
-  // Crear objeto usuario a partir de props individuales o del objeto completo
-  const initialUsuario = usuarioProp || {
+  // 🎯 Usar directamente el usuario del contexto si está disponible
+  const initialUsuario = user || usuarioProp || {
     idUsuario: idUsuario || 0,
     nombre: nombre || "Usuario",
     email: email || "",
@@ -54,59 +44,82 @@ const UserPerfil: React.FC<UserPerfilProps> = ({
     seguidores: seguidores
   };
 
-  const [usuario, setUsuario] = useState<Usuario>(initialUsuario);
+  const [usuario, setUsuario] = useState<UsuarioDTO>(initialUsuario);
 
-  // Actualizar estado si las props cambian
+  // 🔄 Sincronizar con el contexto cuando cambie
   useEffect(() => {
-    if (usuarioProp) {
+    if (user) {
+      setUsuario(user);
+    } else if (usuarioProp) {
       setUsuario(usuarioProp);
-    } else if (idUsuario !== undefined || nombre !== undefined) {
-      setUsuario({
-        idUsuario: idUsuario || usuario.idUsuario,
-        nombre: nombre || usuario.nombre,
-        email: email || usuario.email,
-        telefono: telefono !== undefined ? telefono : usuario.telefono,
-        fotoPerfil: fotoPerfil !== undefined ? fotoPerfil : usuario.fotoPerfil,
-        nivel: nivel || usuario.nivel,
-        seguidores: seguidores !== undefined ? seguidores : usuario.seguidores
-      });
     }
-  }, [usuarioProp, idUsuario, nombre, email, telefono, fotoPerfil, nivel, seguidores]);
+  }, [user, usuarioProp]);
 
+  // 🔄 Método para obtener la URL presignada y actualizar el usuario
+  const obtenerYGuardarUrl = async (fotoPerfilKey: string) => {
+    if (!token || !fotoPerfilKey) return null;
 
-  
- const handleSave = async (data: any) => {
-  try {
-    let updatedFotoPerfil = usuario.fotoPerfil;
-
-    // 📤 Si el usuario seleccionó una nueva imagen, súbela a S3
-    if (data.file) {
-      const key = await uploadImageToS3(data.file, token || "");
-      updatedFotoPerfil = key;
+    try {
+      const { urlkey } = await obtenerUrlImagen(token, fotoPerfilKey);
+      console.log("✅ URL presignada obtenida:", urlkey);
+      
+      // 🎯 Actualizar el usuario localmente con la URL presignada
+      setUsuario(prev => ({
+        ...prev,
+        fotoPerfil: urlkey
+      }));
+      
+      return urlkey;
+    } catch (error) {
+      console.error("❌ Error al obtener la URL presignada:", error);
+      return null;
     }
+  };
 
-    // 📝 Enviar al backend los nuevos datos del usuario
-    const updatedUser = await actualizarDatosUsuario(
-      usuario.idUsuario,
-      { 
-        ...usuario, 
-        ...data, 
-        fotoPerfil: updatedFotoPerfil 
-      },
-      token || ""
-    );
+  const handleSave = async (data: any) => {
+    try {
+      let updatedFotoPerfilKey = usuario.fotoPerfil;
 
+      // 📤 Si el usuario seleccionó una nueva imagen, súbela a S3
+      if (data.file) {
+        const key = await uploadImageToS3(data.file, token || "");
+        updatedFotoPerfilKey = key;
+      }
 
-// Actualizar Context para que otros componentes se enteren
-updateUser(updatedUser);
+      // 📝 Enviar al backend los nuevos datos del usuario (con la key)
+      const updatedUser = await actualizarDatosUsuario(
+        usuario.idUsuario,
+        { 
+          ...usuario, 
+          ...data, 
+          fotoPerfil: updatedFotoPerfilKey 
+        },
+        token || ""
+      );
 
-    setUsuario(updatedUser);
-    setEditing(false);
-  } catch (error) {
-    console.error("Error al guardar usuario:", error);
-    alert("Hubo un error al actualizar tu perfil.");
-  }
-};
+      // ✅ Actualizar el contexto de autenticación primero
+      updateUser(updatedUser);
+      
+      // 🎯 Si hay una nueva imagen, obtener la URL presignada
+      if (data.file && updatedFotoPerfilKey) {
+        await obtenerYGuardarUrl(updatedFotoPerfilKey);
+      }
+
+      setEditing(false);
+      console.log("✅ Perfil actualizado correctamente");
+    } catch (error) {
+      console.error("❌ Error al guardar usuario:", error);
+      alert("Hubo un error al actualizar tu perfil.");
+    }
+  };
+
+  // 🔄 Cargar la URL presignada al montar o cuando cambie la foto
+  useEffect(() => {
+    if (usuario.fotoPerfil && token && !usuario.fotoPerfil.startsWith('http')) {
+      // Solo si es una key (no una URL ya presignada)
+      obtenerYGuardarUrl(usuario.fotoPerfil);
+    }
+  }, [usuario.fotoPerfil, token]);
 
   return (
     <div className="user-profile-wrapper">

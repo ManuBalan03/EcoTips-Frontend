@@ -1,14 +1,15 @@
 import { useAuth } from "../../../api/AuthContext";
 import UserPublicationsSection from "../../../components/common/PublicationsSection/PublicationsUser";
-
-
-
 import UserPerfil from "../../../components/common/UserSection/UserPerfil";
+
 import './PerfilSection.css'
 
 function PerfilSection() {
   const { user, isAuthenticated } = useAuth();
-
+  console.log("?????????????????     ")
+  console.log(user?.fotoPerfil)
+  console.log("--------------")
+  console.log(user?.urlkey)
 
   if (!isAuthenticated || !user) {
     return (

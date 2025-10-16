@@ -6,6 +6,8 @@ export interface UsuarioDTO {
   puntosTotales?: number;
   nivel:string;
   telefono?:string;
+  seguidores?: number;
+  urlkey?:string;
 }
 
 export interface AuthResponse {
@@ -16,4 +18,8 @@ export interface AuthResponse {
 export interface LoginDTO {
   email: string;
   password: string;
+}
+
+export interface UrlPerfil{
+  urlkey:string;
 }

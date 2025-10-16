@@ -47,8 +47,8 @@ const UserPublicationsSection: React.FC = () => {
   };
 
   // 🖥️ Renderizado
-  if (loading) return <p>Cargando publicaciones...</p>;
-
+  if (loading) return <p className="loanding-publications">Cargando publicaciones...</p>;
+ 
   if (!publicaciones.length) return <p>No se encontraron publicaciones.</p>;
 
   return (
