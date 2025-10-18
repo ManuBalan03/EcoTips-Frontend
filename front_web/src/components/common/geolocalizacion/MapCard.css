@@ -1,0 +1,32 @@
+.map-card-container{
+    max-width: 100%;
+  padding: 2rem;
+  margin: 2rem ;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  height: 85%;
+  justify-self: center;
+}
+
+.map-view-container{
+  padding-top:10px;
+    width: 100%;
+   max-height: 50vh;
+  min-height: 300px; 
+  border-radius: 12px;
+  overflow: hidden;
+
+}
+
+.punto-information{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.centros{
+  font-size: 20px; 
+}

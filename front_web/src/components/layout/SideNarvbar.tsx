@@ -14,7 +14,7 @@ const SideNarvbar = () => {
           <Link to="/notificaciones" className="ruta">Notificaciones</Link>
         </li>
         <li>
-          <Link to="/map" className="ruta">Centros de reciclaje</Link>
+          <Link to="/PuntosVerdes" className="ruta">Centros de reciclaje</Link>
         </li>
         
       </ul>

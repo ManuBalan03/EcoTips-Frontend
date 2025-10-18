@@ -12,6 +12,7 @@ import LandingPage from './components/pages/LandingPage';
 import NotificationsPanel from './routes/Home/NotificationsSection';
 import PerfilSection from './routes/Home/PerfilSection/PerfilSection';
 import RootLayout from './components/layout/RootLayout';
+import PuntoVerdeSection from './routes/Home/PuntoVerdeSection';
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: "/perfil",
         element: <PerfilSection />,
+      },
+      {
+        path: "/PuntosVerdes",
+        element: <PuntoVerdeSection/>,
       }
     ]
   }

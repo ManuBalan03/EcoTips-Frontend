@@ -10,13 +10,13 @@ interface NotificationItemProps {
 const NotificationDetail: React.FC<NotificationItemProps> = ({ notificacion, onClick }) => {
   const getNotificationIcon = (tipo?: string) => {
     switch(tipo) {
-      case 'aceptada': return '✅';
-      case 'rechazada': return '❌';
+      case 'APROBADA': return '✅';
+      case 'RECHAZADA': return '❌';
       case 'Comentario': return '💬';
       case 'Reaccion': return '❤️';
       case 'Solicitud Publicacion': return '📝';
       case 'Publicacion': return '⏳';
-      case 'modificaciones': return '✏️';
+      case 'Publicacion Modificaciones': return '✏️';
       default: return '🔔';
     }
   };
@@ -42,7 +42,7 @@ const NotificationDetail: React.FC<NotificationItemProps> = ({ notificacion, onC
         {getNotificationIcon(notificacion.tipo)}
       </div>
       <div className="notification-details">
-        <h3>{notificacion.tipo}</h3>
+        <h3>{ notificacion.tipo}</h3>
         {notificacion.mensaje && (
           <p className="notification-content">{notificacion.mensaje}</p>
         )}

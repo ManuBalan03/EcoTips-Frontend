@@ -23,9 +23,10 @@ import CommentSection from "../CommentComponent";
 interface DetailsPublicationProps {
   publicacionId: number;
   onBack?: () => void;
+   modoEdicion?: boolean;
 }
 
-const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, onBack }) => {
+const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, onBack, modoEdicion = false }) => {
   const { token } = useAuth();
   const [publicacion, setPublicacion] = useState<PublicacionDTO | null>(null);
   const [comentarios, setComentarios] = useState<ComentarioDTO[]>([]);
@@ -151,11 +152,13 @@ const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, 
         )}
       </div>
 
-      <CommentSection
-        idPublicacion={publicacion.id ?? 0}
-        onCommentAdded={() => console.log("Comentario agregado")}
-        onReactionUpdated={() => console.log("Reacción actualizada")}
-      />
+    {!modoEdicion && (
+  <CommentSection
+    idPublicacion={publicacion.id ?? 0}
+    onCommentAdded={() => console.log("Comentario agregado")}
+    onReactionUpdated={() => console.log("Reacción actualizada")}
+  />
+)}
     </div>
   );
 };

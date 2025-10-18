@@ -10,11 +10,12 @@ import { PublicacionDTO } from "../../../api/services/Publications/Types/Publica
 interface EvaluacionDetailProps {
   evaluacionId: number;
   onBack: () => void;
+  onRefreshNotifications?: () => void;
 }
 
 type Veredicto = "APROBADA" | "RECHAZADA" | "MODIFICACION";
 
-const EvaluacionDetail: React.FC<EvaluacionDetailProps> = ({ evaluacionId, onBack }) => {
+const EvaluacionDetail: React.FC<EvaluacionDetailProps> = ({ evaluacionId, onBack, onRefreshNotifications }) => {
   const { user, token } = useAuth();
   const [publicacion, setPublicacion] = useState<PublicacionDTO | null>(null);
   const [votos, setVotos] = useState<VotosDTO[]>([]);
@@ -71,6 +72,7 @@ const EvaluacionDetail: React.FC<EvaluacionDetailProps> = ({ evaluacionId, onBac
       await refreshPoints();
       const votosActualizados = await obtenerVotosPorPublicacion(evaluacionId, token);
       setVotos(votosActualizados);
+      onRefreshNotifications?.();
       onBack();
     } catch (err) {
       console.error("Error al enviar evaluación:", err);
@@ -99,7 +101,7 @@ const EvaluacionDetail: React.FC<EvaluacionDetailProps> = ({ evaluacionId, onBac
 
       <div className="evaluation-header">
         <div className="evaluacion-avatar">
-          {publicacion.fotoPerfil ? <img src={publicacion.fotoPerfil} alt={publicacion.nombreAutor} /> :
+          {user?.fotoPerfil ? <img src={user.fotoPerfil} alt={publicacion.nombreAutor} /> :
             <div className="avatar-initial">{obtenerIniciales(publicacion.nombreAutor)}</div>}
         </div>
         <h1>{publicacion.titulo}</h1>

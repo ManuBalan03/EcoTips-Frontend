@@ -1,0 +1,29 @@
+.agregar-conteiner{
+  max-width: 100%;
+  margin: 2rem 2rem 2rem 2rem;
+  padding: 2rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+}
+
+.agregar{
+  margin-top: 1rem;
+  padding: 0.7rem;
+  padding-left: 2rem;
+   padding-right: 2rem;
+  background-color:   #45DF88;
+;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+.agregar:hover{
+  background-color:   #03A688;
+}

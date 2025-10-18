@@ -1,7 +1,7 @@
 export interface PublicacionDTO {
   id?: number;
   titulo: string;
-  url_key: string;
+  url_key?: string;
   descripcion?: string;
   idUsuario: number;
   fechaCreacion?: string;

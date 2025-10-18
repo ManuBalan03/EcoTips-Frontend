@@ -54,9 +54,9 @@ export const listarTodasEvaluacionesSinPaginacion = async (
 export const obtenerEvaluacionesPorPublicacion = async (
   idPublicacion: number,
   token: string
-): Promise<EvaluacionDTO[]> => {
+): Promise<EvaluacionDTO> => {
   const response = await axios.get(
-    `${BASE_URL}/Evaluacion/publicacion/${idPublicacion}`,
+     `${BASE_URL}/Evaluacion/publicacion/evaluate/${idPublicacion}`,
     {
       headers: { Authorization: `Bearer ${token}` },
     }

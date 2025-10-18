@@ -113,3 +113,17 @@ export const eliminarPublicacion = async (
     }
   });
 };
+
+export const obtenerEstadoPublicacion = async (
+  id: number,
+  token: string
+): Promise<string> => {
+  const response = await axios.get(`${BASE_URL}/estado/${id}/`, {
+    withCredentials: true,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.data; // Devuelve el estado como string (ej: "MODIFICADA")
+};

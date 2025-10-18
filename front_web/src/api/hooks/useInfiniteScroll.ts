@@ -1,4 +1,3 @@
-// hooks/useInfiniteScroll.ts
 import { useState, useEffect, useCallback } from 'react';
 
 interface PaginatedResponse<T> {
@@ -20,31 +19,31 @@ export function useInfiniteScroll<T>(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // selector por defecto (busca options.idField o 'id')
   const idSel: IdSelector<T> = options?.idSelector ?? ((item: any) => {
     if (options?.idField) return (item as any)[options.idField];
     return (item as any).id;
   });
 
-  const loadMore = useCallback(async () => {
-    if (loading || !hasMore) return;
+  const loadMore = useCallback(async (resetting: boolean = false) => {
+    if (loading) return;
 
     setLoading(true);
     try {
-      const currentPage = page;
+      // Si estamos reseteando, forzamos page = 0
+      const currentPage = resetting ? 0 : page;
       const data = await fetchFn(currentPage, size);
 
       setItems(prevItems => {
+        if (resetting) return data.content; // reemplaza todo
         const newItems = data.content.filter(e => {
           const eid = idSel(e);
-          // si no hay id, lo dejamos pasar (no lo deduplicamos)
           if (eid === undefined || eid === null) return true;
           return !prevItems.some(p => idSel(p) === eid);
         });
         return [...prevItems, ...newItems];
       });
 
-      setPage(prev => prev + 1);
+      setPage(currentPage + 1);
       setHasMore(currentPage + 1 < data.totalPages);
     } catch (err) {
       console.error(err);
@@ -52,13 +51,20 @@ export function useInfiniteScroll<T>(
     } finally {
       setLoading(false);
     }
-  }, [page, size, hasMore, loading, fetchFn, idSel]);
+  }, [page, size, loading, fetchFn, idSel]);
 
-  // Primer carga
+  // 🔁 Nueva función refresh estable
+  const refresh = useCallback(async () => {
+    setItems([]);
+    setPage(0);
+    setHasMore(true);
+    await loadMore(true); // true = reiniciar desde 0
+  }, [loadMore]);
+
   useEffect(() => {
     loadMore();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { items, hasMore, loading, error, loadMore, setItems, setPage, setHasMore };
+  return { items, hasMore, loading, error, loadMore, refresh };
 }

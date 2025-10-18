@@ -15,7 +15,9 @@ import DetailsPublication from '../Publication/PublicationDetail';
 import NotificationsList from '../NotificationSection/NotificationList';
 import NotificationsNav from '../NotificationSection/NotificationsNav';
 import { useInfiniteScroll } from '../../../api/hooks/useInfiniteScroll';
+import  ModificationDetail from '../PublicationsSection/PublicationModificationDetail';
 import './NotificationsPanel.css';
+import { obtenerEstadoPublicacion } from '../../../api/services/Publications/PublicacionesService';
 
 // Tipos
 export type ActiveTab = 'notificaciones' | 'solicitudes' | 'evaluaciones' | 'publicacion';
@@ -42,13 +44,18 @@ const NotificationsPanel: React.FC = () => {
   const [evaluacionesView, setEvaluacionesView] = useState<'list' | 'detail'>('list');
   const [selectedEvaluacion, setSelectedEvaluacion] = useState<number | null>(null);
 
+  const [modificacionView, setModificacionView] = useState<'list' | 'detail'>('list');
+  const [selectedModificacion, setSelectedModificacion] = useState<number | null>(null);
+
+
   // 🚀 Scroll infinito para notificaciones
   const {
     items: notificaciones,
     loading,
     error,
     hasMore,
-    loadMore
+    loadMore,
+    refresh
   } = useInfiniteScroll<NotificationsDTO>(
     async (page, size) => {
       if (!user?.idUsuario || !token) return { content: [], totalPages: 0, totalElements: 0 };
@@ -59,8 +66,20 @@ const NotificationsPanel: React.FC = () => {
     { idField: 'idNotificacion' }
   );
 
+     const refreshNotifications = async () => {
+  if (!user?.idUsuario || !token) return;
+  try {
+    await refresh(); 
+    const count = await obtenerContadorNoLeidas(user.idUsuario, token);
+    setUnreadCount(count);
+  } catch (err) {
+    console.error("Error al refrescar notificaciones:", err);
+  }
+};
+
   // 🔄 Contador de no leídas
   useEffect(() => {
+ 
     const fetchUnread = async () => {
       if (!user?.idUsuario || !token) return;
       try {
@@ -95,6 +114,17 @@ const NotificationsPanel: React.FC = () => {
   const handleNotificationClick = async (notificacion: NotificationsDTO) => {
     if (!user?.idUsuario || !token) return;
 
+     const estado = await obtenerEstadoPublicacion(notificacion.idPublicacion!, token);
+if (notificacion.tipo === 'Publicacion Modificaciones' && notificacion.idPublicacion  &&  estado==='MODIFICACION') {
+  setSelectedModificacion(notificacion.idPublicacion);
+  setModificacionView('detail');
+  return;
+}
+else{
+  alert("publicacion ya fue modificada")
+}
+
+
     const notificationId = notificacion.idNotificacion;
     const publicacionId = notificacion.idPublicacion;
     if (!notificationId) return;
@@ -121,6 +151,19 @@ const NotificationsPanel: React.FC = () => {
   // 🧩 Renderizar contenido según pestaña
   const renderContent = () => {
     if (activeTab === 'notificaciones') {
+
+      if (modificacionView === 'detail' && selectedModificacion !== null) {
+  return (
+    <ModificationDetail
+      publicacionId={selectedModificacion}
+      onBack={() => {
+        setSelectedModificacion(null);
+        setModificacionView('list');
+      }}
+    />
+  );
+}
+
       if (publicacionView === 'detail' && selectedPublicacion !== null) {
         return (
           <DetailsPublication
@@ -172,6 +215,7 @@ const NotificationsPanel: React.FC = () => {
             setSelectedEvaluacion(null);
             setEvaluacionesView('list');
           }}
+           onRefreshNotifications={refreshNotifications}
         />
       ) : (
         <EvaluationList onSelectEvaluacion={id => {

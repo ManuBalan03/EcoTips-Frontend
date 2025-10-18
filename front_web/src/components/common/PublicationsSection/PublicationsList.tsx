@@ -14,9 +14,9 @@ const PublicationList = ({ publicaciones, user, onDelete, onEdit }: Props) => {
 
 return (
     <div className="tips-list">
-      {publicaciones.map((publicacion) => (
+      {publicaciones.map((publicacion, index) => (
         <EcoTipCard 
-          key={publicacion.id} 
+          key={`${publicacion.id}-${index}`}
           tip={publicacion} 
           user={user}
           onDelete={onDelete ? () => onDelete(publicacion.id!) : undefined}

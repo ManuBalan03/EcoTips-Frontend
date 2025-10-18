@@ -6,11 +6,6 @@ import './PerfilSection.css'
 
 function PerfilSection() {
   const { user, isAuthenticated } = useAuth();
-  console.log("?????????????????     ")
-  console.log(user?.fotoPerfil)
-  console.log("--------------")
-  console.log(user?.urlkey)
-
   if (!isAuthenticated || !user) {
     return (
         <div className="home-container">

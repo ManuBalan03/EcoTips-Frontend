@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { PublicacionDTO } from "../../../api/services/Publications/Types/PublicationType";
+import FileUpload from "../Buttons/FileUpload";
 
 interface Props {
   onClose: () => void;
@@ -127,70 +128,12 @@ const EcoTipFormModal = ({ onClose, onPublish, user }: Props) => {
             className="form-input"
           />
 
-          {/* Nuevo componente de subida de archivos */}
-          <div 
-            className={`file-upload-area ${previewUrl ? 'has-preview' : ''}`}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-          >
-            {!previewUrl ? (
-              <>
-                <div className="upload-placeholder">
-                  <div className="upload-icon">📁</div>
-                  <p>Arrastra y suelta una imagen o video aquí</p>
-                  <p className="upload-subtext">o</p>
-                  <button 
-                    type="button"
-                    className="browse-button"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    Selecciona un archivo
-                  </button>
-                  <p className="file-requirements">
-                    Formatos: JPEG, PNG, GIF, WebP, MP4, MOV • Máx. 10MB
-                  </p>
-                </div>
-              </>
-            ) : (
-              <div className="file-preview">
-                {selectedFile?.type.startsWith('image/') ? (
-                  <img 
-                    src={previewUrl} 
-                    alt="Vista previa" 
-                    className="preview-image"
-                  />
-                ) : (
-                  <div className="video-preview">
-                    <video controls className="preview-video">
-                      <source src={previewUrl} type={selectedFile?.type} />
-                      Tu navegador no soporta el elemento de video.
-                    </video>
-                  </div>
-                )}
-                <div className="preview-info">
-                  <span className="file-name">{selectedFile?.name}</span>
-                  <span className="file-size">
-                    {(selectedFile?.size! / (1024 * 1024)).toFixed(2)} MB
-                  </span>
-                </div>
-                <button 
-                  type="button"
-                  className="remove-file-button"
-                  onClick={handleRemoveFile}
-                >
-                  ✕
-                </button>
-              </div>
-            )}
-
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*,video/*"
-              onChange={handleFileSelect}
-              className="file-input-hidden"
-            />
-          </div>
+     <FileUpload 
+            onFileSelect={setSelectedFile}
+            acceptedTypes="image/*,video/*"
+            maxSizeMB={10}
+            className="ecotip-file-upload"
+          />
 
           <button 
             onClick={handleSubmit} 
