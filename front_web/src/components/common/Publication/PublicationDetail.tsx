@@ -123,7 +123,7 @@ const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, 
     <div className="tip-card">
       {onBack && (
         <button onClick={onBack} className="back-button">
-          ← Volver
+        Volver
         </button>
       )}
 

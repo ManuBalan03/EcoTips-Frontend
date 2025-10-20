@@ -120,7 +120,8 @@ if (notificacion.tipo === 'Publicacion Modificaciones' && notificacion.idPublica
   setModificacionView('detail');
   return;
 }
-else{
+if (notificacion.tipo === 'Publicacion Modificaciones' && notificacion.idPublicacion  &&  estado!='MODIFICACION') {
+
   alert("publicacion ya fue modificada")
 }
 

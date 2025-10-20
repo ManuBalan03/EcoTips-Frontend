@@ -8,9 +8,12 @@
 }
 
 .back-button {
-  background: none;
+ background: linear-gradient(to bottom, #45DF88, #03A688);
+  width: 20%;
+  text-align: center;
+  
   border: none;
-  color: #2196F3;
+  color: white;
   cursor: pointer;
   margin-bottom: 20px;
   font-size: 14px;
@@ -19,9 +22,6 @@
   gap: 5px;
 }
 
-.back-button:hover {
-  text-decoration: underline;
-}
 
 .publication-header {
   margin-bottom: 20px;

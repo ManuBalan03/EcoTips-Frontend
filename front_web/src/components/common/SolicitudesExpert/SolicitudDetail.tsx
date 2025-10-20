@@ -10,19 +10,6 @@ import './solicitud.css';
 
 import { PublicacionDTO } from "../../../api/services/Publications/Types/PublicationType";
 
-
-// interface Solicitud {
-//   id: number;
-//   titulo: string;
-//   contenido: string;
-//   descripcion?: string;
-//   idUsuario: number;
-//   fechaCreacion?: string;
-//   nombreAutor?: string;
-//   fotoPerfil?: string;
-//   estado?: string;
-// }
-
 interface SolicitudDetailProps {
   solicitudId: number;
   onBack: () => void;
@@ -147,12 +134,12 @@ const SolicitudDetail: React.FC<SolicitudDetailProps> = ({ solicitudId, onBack }
   return (
     <div className="solicitud-detail">
       <button onClick={onBack} className="back-button">
-        ← Volver a la lista
+      Volver a la lista
       </button>
       
       <div className="solicitud-header">
         <div className="solicitud-avatar">
-          {publicacion.fotoPerfil ? (
+          {publicacion ? (
             <img src={publicacion.fotoPerfil} alt={publicacion.nombreAutor || 'Autor'} />
           ) : (
             <div className="avatar-initial">

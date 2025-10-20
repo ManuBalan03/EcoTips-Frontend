@@ -7,7 +7,7 @@ export interface PublicacionDTO {
   fechaCreacion?: string;
   nombreAutor?: string;
   estado?: string;
-//  fotoPerfil?: string;
+ fotoPerfil?: string;
     contenido_key?: string;
 }
 

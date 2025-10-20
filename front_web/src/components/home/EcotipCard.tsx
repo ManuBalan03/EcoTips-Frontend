@@ -79,10 +79,10 @@ const EcoTipsPage = () => {
       {loading && <p>Cargando...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
       {hasMore && (
-        <button onClick={loadMore} disabled={loading} className="load-more-btn">
-          Ver más
-        </button>
-      )}
+  <button onClick={() => loadMore()} disabled={loading} className="load-more-btn">
+    Ver más
+  </button>
+)}
     </div>
   );
 };

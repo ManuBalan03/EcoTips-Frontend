@@ -104,10 +104,10 @@ const EvaluacionDetail: React.FC<EvaluacionDetailProps> = ({ evaluacionId, onBac
           {user?.fotoPerfil ? <img src={user.fotoPerfil} alt={publicacion.nombreAutor} /> :
             <div className="avatar-initial">{obtenerIniciales(publicacion.nombreAutor)}</div>}
         </div>
-        <h1>{publicacion.titulo}</h1>
         <div className="evaluation-meta">
-          <span className="author">{publicacion.nombreAutor || 'Usuario'}</span>
-          <span className="date">{formatDate(publicacion.fechaCreacion)}</span>
+           <h2>{publicacion.titulo}</h2>
+          <p className="author">{publicacion.nombreAutor || 'Usuario'}</p>
+          <p className="date">{formatDate(publicacion.fechaCreacion)}</p>
         </div>
       </div>
 

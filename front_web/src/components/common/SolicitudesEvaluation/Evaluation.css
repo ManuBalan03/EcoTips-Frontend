@@ -33,21 +33,24 @@
 }
 
 .notification-header {
-  display: flex;
+ display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .notification-avatar {
-  width: 40px;
-  height: 40px;
+ width: 56px;
+  height: 56px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: #f0f0f0;
+  background-color: #e0e0e0;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .notification-avatar img {
@@ -90,15 +93,7 @@
    text-align: end;
 }
 
-.notification-content p {
-  margin: 0;
-  font-size: 15px;
-  color: #444;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-   text-align: end;
-}
+
 
 .empty-notification {
   text-align: center;
@@ -182,15 +177,36 @@
 }
 
 .evaluation-meta {
-  display: flex;
-  gap: 15px;
-  color: #666;
-  font-size: 14px;
+  flex: 1;
+}
+.evaluation-meta h2{
+   margin: 0;
+  font-size: 24px;
+  color: #333;
 }
 
 .evaluation-meta .author {
-  font-weight: 500;
+   margin: 0;
+  font-size: 14px;
+  color: #666;
 }
+.evaluacion-avatar .date{
+  margin: 0;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 0;
+}
+
+.notification-content p {
+  margin: 0;
+  font-size: 15px;
+  color: #444;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+   text-align: end;
+}
+
 
 .evaluation-content section {
   margin-bottom: 25px;
@@ -320,15 +336,24 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+.evaluation-header{
+   display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
 .evaluacion-avatar {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: #f0f0f0;
+  background-color: #e0e0e0;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .evaluacion-avatar img {
