@@ -34,11 +34,8 @@
 
 .notification-header {
  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f0f0f0;
+ gap: 10px;
+  margin-bottom: 8px;
 }
 
 .notification-avatar {
@@ -51,6 +48,16 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.notification-content p {
+  margin: 0;
+  font-size: 15px;
+  color: #444;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+   text-align: end;
 }
 
 .notification-avatar img {
@@ -150,7 +157,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.back-button {
+/* .back-button {
   background: none;
   border: none;
   color: #2196F3;
@@ -160,10 +167,25 @@
   display: flex;
   align-items: center;
   gap: 5px;
-}
+} */
 
 .back-button:hover {
   text-decoration: underline;
+}
+
+.evaluation-text{
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #ccc;
+  font-size: 16px;
+  font-family: "Inter", system-ui, sans-serif;
+  resize: vertical;
+  transition: all 0.2s ease;
+  background-color: #f9f9f9;
+  color: #333;
+  margin-bottom: 2%;
 }
 
 .evaluation-header {
@@ -240,7 +262,6 @@
   width: 100%;
   max-height: 300px;
   object-fit: contain;
-  border: 1px solid #eee;
 }
 
 .no-votes {

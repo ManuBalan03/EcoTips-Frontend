@@ -97,11 +97,11 @@ const EvaluacionDetail: React.FC<EvaluacionDetailProps> = ({ evaluacionId, onBac
 
   return (
     <div className="evaluation-detail-container">
-      <button onClick={onBack} className="back-button">← Volver</button>
+      <button onClick={onBack} className="back-button">Volver</button>
 
       <div className="evaluation-header">
         <div className="evaluacion-avatar">
-          {user?.fotoPerfil ? <img src={user.fotoPerfil} alt={publicacion.nombreAutor} /> :
+          {publicacion.fotoPerfil ? <img src={publicacion.fotoPerfil} alt={publicacion.nombreAutor} /> :
             <div className="avatar-initial">{obtenerIniciales(publicacion.nombreAutor)}</div>}
         </div>
         <div className="evaluation-meta">
@@ -154,8 +154,8 @@ const EvaluacionDetail: React.FC<EvaluacionDetailProps> = ({ evaluacionId, onBac
             <label><input type="radio" name="veredicto" checked={veredicto === 'RECHAZADA'} onChange={() => setVeredicto('RECHAZADA')} /> 👎 Rechazar</label>
             <label><input type="radio" name="veredicto" checked={veredicto === 'MODIFICACION'} onChange={() => setVeredicto('MODIFICACION')} /> ✏️ Requiere modificaciones</label>
           </div>
-          <textarea value={comentario} onChange={e => setComentario(e.target.value)} placeholder="Explica tu decisión..." rows={3} />
-          <button onClick={handleEnviarEvaluacion} disabled={!veredicto || submitting}>
+          <textarea className="evaluation-text" value={comentario} onChange={e => setComentario(e.target.value)} placeholder="Explica tu decisión..." rows={3} />
+          <button className="back-button " onClick={handleEnviarEvaluacion} disabled={!veredicto || submitting}>
             {submitting ? 'Enviando...' : 'Enviar Voto'}
           </button>
           {error && <p className="error-message">{error}</p>}

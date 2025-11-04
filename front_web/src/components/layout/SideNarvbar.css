@@ -18,7 +18,7 @@
 }
 
 
-ul li {
+.actions-user li {
     list-style-type: none;
     text-decoration: none;
     font-size: 20px;

@@ -4,35 +4,49 @@ import UserCard from "../../components/home/userinfo";
 import EcoTipsPage from "../../components/home/EcotipCard";
 import { obtenerUsuarioPorId } from "../../api/services/UserService";
 import { UsuarioDTO } from "../../api/types/UserTypes";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Home.css";
 
 function Home() {
   const { user, isAuthenticated, token, updateUser } = useAuth();
   const [userCompleto, setUserCompleto] = useState<UsuarioDTO | null>(null);
   const [loading, setLoading] = useState(true);
+  const hasFetched = useRef(false); // 👈 Referencia para controlar llamadas
 
-  // 👇 useEffect para cargar el usuario completo desde la API
+  // 👇 useEffect CORREGIDO - Solo se ejecuta una vez
   useEffect(() => {
-    const cargarUsuario = async () => {
-      if (!user || !token) return;
+    // 🔒 Prevenir múltiples ejecuciones
+    if (hasFetched.current || !user?.idUsuario || !token) {
+      setLoading(false);
+      return;
+    }
 
+    const cargarUsuario = async () => {
       try {
+        console.log('🔄 Cargando datos del usuario...');
         const usuarioData = await obtenerUsuarioPorId(user.idUsuario, token);
         setUserCompleto(usuarioData);
-        updateUser(usuarioData); //
+        updateUser(usuarioData);
+        hasFetched.current = true; // 👈 Marcar como ya cargado
       } catch (error) {
         console.error("Error al obtener usuario:", error);
         // Si falla la API, mostramos el usuario del contexto
         setUserCompleto(user);
-  
       } finally {
         setLoading(false);
       }
     };
    
     cargarUsuario();
-  }, [user, token]);
+  }, [user?.idUsuario, token, updateUser]); // 👈 Dependencias específicas
+
+  // 🎯 Efecto para resetear cuando el usuario cambie
+  useEffect(() => {
+    // Si el usuario cambia, resetear el flag
+    hasFetched.current = false;
+    setUserCompleto(null);
+    setLoading(true);
+  }, [user?.idUsuario]); // 👈 Solo cuando cambia el ID del usuario
 
   if (!isAuthenticated || !user) {
     return (
@@ -49,7 +63,7 @@ function Home() {
   if (loading) {
     return (
       <div className="home-container">
-        <p>Cargando información del usuario...</p>
+        <div className="loading-spinner">🔄 Cargando información...</div>
       </div>
     );
   }

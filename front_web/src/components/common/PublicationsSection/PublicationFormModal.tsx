@@ -8,7 +8,6 @@ interface Props {
   user: any;
 }
 
-
 const EcoTipFormModal = ({ onClose, onPublish, user }: Props) => {
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
@@ -16,67 +15,71 @@ const EcoTipFormModal = ({ onClose, onPublish, user }: Props) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [isUploading, setIsUploading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // 👈 Nuevo estado
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const submitInProgress = useRef(false); // 👈 Referencia para prevenir doble submit
 
-  // Manejar selección de archivo
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validar tipo de archivo
     const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/quicktime'];
     if (!validTypes.includes(file.type)) {
       alert('Por favor, selecciona una imagen (JPEG, PNG, GIF, WebP) o video (MP4, MOV)');
       return;
     }
 
-    // Validar tamaño (10MB máximo)
     if (file.size > 10 * 1024 * 1024) {
       alert('El archivo es demasiado grande. Máximo 10MB permitido.');
       return;
     }
 
     setSelectedFile(file);
-    setContenido(URL.createObjectURL(file)); // Preview temporal
-    
-    // Para preview inmediato
     const objectUrl = URL.createObjectURL(file);
     setPreviewUrl(objectUrl);
-
-    // También establecer la URL/key para el backend
-    setContenido(file.name); // O lo que necesites para tu backend
+    setContenido(file.name);
   };
 
-  
+  const handleSubmit = async () => {
+    // 👇 PREVENCIÓN DE DOBLE SUBMIT
+    if (isSubmitting || submitInProgress.current) {
+      console.log('⚠️ Submit ya en progreso, ignorando...');
+      return;
+    }
 
- const handleSubmit = async () => {
-  if (!user) return;
+    if (!user) return;
 
-  setIsUploading(true);
+    // 🔒 BLOQUEAR NUEVOS SUBMITS
+    setIsSubmitting(true);
+    submitInProgress.current = true;
+    setIsUploading(true);
 
-  try {
-    const nuevaPublicacion: PublicacionDTO = {
-      titulo,
-      url_key: Url_key, // key temporal, luego el padre la reemplaza
-      descripcion,
-      idUsuario: user.id!,
-      fechaCreacion: new Date().toISOString(),
-    };
+    try {
+      const nuevaPublicacion: PublicacionDTO = {
+        titulo,
+        url_key: Url_key,
+        descripcion,
+        idUsuario: user.id!,
+        fechaCreacion: new Date().toISOString(),
+      };
 
-    // 👉 Ahora le pasamos la publicación y el archivo seleccionado al padre
-    onPublish(nuevaPublicacion, selectedFile ?? undefined);
+      await onPublish(nuevaPublicacion, selectedFile ?? undefined);
+      
+      // ✅ Éxito - cerrar modal
+      onClose();
 
-    // Cerrar modal aquí si quieres
-  } catch (error) {
-    console.error('Error al subir archivo:', error);
-    alert('Error al subir el archivo. Intenta nuevamente.');
-  } finally {
-    setIsUploading(false);
-  }
-};
+    } catch (error) {
+      console.error('Error al subir archivo:', error);
+      alert('Error al subir el archivo. Intenta nuevamente.');
+    } finally {
+      // 🔓 DESBLOQUEAR
+      setIsSubmitting(false);
+      submitInProgress.current = false;
+      setIsUploading(false);
+    }
+  };
 
-
-  // Limpiar preview cuando el componente se desmonte
+  // ... resto del código igual
   const handleRemoveFile = () => {
     setSelectedFile(null);
     setPreviewUrl("");
@@ -119,6 +122,7 @@ const EcoTipFormModal = ({ onClose, onPublish, user }: Props) => {
             onChange={(e) => setTitulo(e.target.value)} 
             placeholder="Título" 
             className="form-input"
+            disabled={isSubmitting} // 👈 Deshabilitar inputs durante submit
           />
           
           <input 
@@ -126,22 +130,31 @@ const EcoTipFormModal = ({ onClose, onPublish, user }: Props) => {
             onChange={(e) => setDescripcion(e.target.value)} 
             placeholder="Descripción" 
             className="form-input"
+            disabled={isSubmitting} // 👈 Deshabilitar inputs durante submit
           />
 
-     <FileUpload 
+          <FileUpload 
             onFileSelect={setSelectedFile}
             acceptedTypes="image/*,video/*"
             maxSizeMB={10}
             className="ecotip-file-upload"
+            disabled={isSubmitting} // 👈 Pasar prop disabled al FileUpload
           />
 
           <button 
             onClick={handleSubmit} 
             className="publish-button"
-            disabled={isUploading || !titulo.trim()}
+            disabled={isSubmitting || !titulo.trim()} // 👈 Usar isSubmitting aquí
           >
-            {isUploading ? "Subiendo..." : "Publicar"}
+            {isSubmitting ? "🔄 Publicando..." : "📤 Publicar"}
           </button>
+
+          {/* 👇 Mensaje de prevención de doble click */}
+          {isSubmitting && (
+            <div className="submit-warning">
+              ⚠️ No cierres esta ventana mientras se publica...
+            </div>
+          )}
         </div>
       </div>
     </div>

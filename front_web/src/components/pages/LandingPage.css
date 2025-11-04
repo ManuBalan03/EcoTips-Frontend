@@ -44,7 +44,7 @@ ul{
 .Registro {
     background-color: #45DF88;
     border-radius: 5px;
-    padding: 10% 10% ;
+    padding: 10% ;
     color: #F5F7FA ;
 }
 .Registro:hover{
@@ -74,7 +74,7 @@ span{
     height: 100%;
 }
 
-p{
+.Texto p{
     text-align: justify;
     font-size: 25px;
     line-height: 1.6;

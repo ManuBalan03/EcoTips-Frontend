@@ -13,7 +13,7 @@ const EcoTipsPage = () => {
   const { user, token } = useAuth();
   const [showModal, setShowModal] = useState(false);
 
-  // 👇 Hook scroll infinito
+  // 👇 Hook scroll infinito - SOLO CAMBIO EL idField
   const {
     items: tips,
     loading,
@@ -23,8 +23,8 @@ const EcoTipsPage = () => {
   } = useInfiniteScroll<PublicacionDTO>(
     async (page, size) => {
       if (!token) return { content: [], totalPages: 0, totalElements: 0 };
-      // Debes tener un endpoint paginado
-      const data = await obtenerTodasLasPublicaciones( token, "APROBADA",page,size);
+      
+      const data = await obtenerTodasLasPublicaciones(token, "APROBADA", page, size);
       return {
         content: data.content,
         totalPages: data.totalPages ?? 0,
@@ -32,7 +32,7 @@ const EcoTipsPage = () => {
       };
     },
     5, // tamaño de página
-    { idField: "idPublicacion" } // 👈 ajusta este campo al que usa tu DTO
+    { idField: "id" } // 👈 CAMBIADO: "idPublicacion" → "id"
   );
 
   const handleAddTip = async (nuevo: PublicacionDTO, file?: File) => {
@@ -44,10 +44,6 @@ const EcoTipsPage = () => {
       }
 
       const respuesta = await crearPublicacion(nuevo, token);
-
-      // Opcional: puedes resetear el scroll para que vuelva a cargar desde la primera página
-      
-
       setShowModal(false);
     } catch (error) {
       console.error("Error publicando tip:", error);
@@ -79,10 +75,10 @@ const EcoTipsPage = () => {
       {loading && <p>Cargando...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
       {hasMore && (
-  <button onClick={() => loadMore()} disabled={loading} className="load-more-btn">
-    Ver más
-  </button>
-)}
+        <button onClick={() => loadMore()} disabled={loading} className="load-more-btn">
+          Ver más
+        </button>
+      )}
     </div>
   );
 };
