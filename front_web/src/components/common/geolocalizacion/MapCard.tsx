@@ -33,7 +33,7 @@ const MapCard: React.FC<MapCardProps> = ({ puntos, onMarkerClick }) => {
   
   return (
     <div className='map-card-container'>
-      <span className='centros'><b>Centros de reciclaje cerca de tí</b></span>
+      <span className='centros'><b>Centros de reciclaje cerca de ti</b></span>
       <div className='map-view-container'>
         <MapContainer
           center={[locationInfo.latitud, locationInfo.longitud]}
@@ -61,7 +61,7 @@ const MapCard: React.FC<MapCardProps> = ({ puntos, onMarkerClick }) => {
         </MapContainer>
       </div>
       <div className='punto-information'>
-        <span><b>Descripcion: </b>{descripcion}</span>
+        <span><b>Descripción: </b>{descripcion}</span>
       </div>
     </div>
   )

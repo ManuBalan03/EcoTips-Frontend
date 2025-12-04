@@ -1,0 +1,188 @@
+/* ============================================
+   VARIABLES CSS (Custom Properties)
+   ============================================ */
+:root {
+  /* Paleta de colores principal */
+  --color-primary: #45DF88;
+  --color-primary-hover: #03A688;
+  --color-primary-light: #E8F7EF;
+  
+  /* Colores de fondo */
+  --bg-light: #F5F7FA;
+  --bg-white: #FFFFFF;
+  
+  /* Colores de texto */
+  --text-dark: #000000;
+  --text-light: #F5F7FA;
+  --text-gray: #333333;
+  
+  /* Colores auxiliares */
+  --color-aliceblue: aliceblue;
+  
+  /* Espaciados y dimensiones */
+  --border-radius-sm: 5px;
+  --border-radius-md: 10px;
+  --spacing-xs: 1rem;
+  --spacing-sm: 1.5%;
+  --spacing-md: 3%;
+  --spacing-lg: 5%;
+  --spacing-xl: 10%;
+  
+  /* Tipografía */
+  --font-family-primary: "Inter", sans-serif;
+  --font-weight-normal: 500;
+  --font-weight-bold: 600;
+  --font-size-base: 20px;
+  --font-size-large: 25px;
+  --line-height: 1.6;
+}
+
+/* ============================================
+   RESET Y ESTILOS BASE
+   ============================================ */
+* {
+  font-family: var(--font-family-primary);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/* ============================================
+   COMPONENTES
+   ============================================ */
+
+/* Navegación */
+.Navegacion {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  align-items: center;
+  font-weight: var(--font-weight-normal);
+}
+
+/* Logo */
+.Logo {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-xs);
+  align-items: center;
+}
+
+.logoimg {
+  width: 100px;
+  height: auto;
+}
+
+.TextLogo {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-dark);
+}
+
+/* Menú de navegación */
+ul {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-xs);
+}
+
+/* Botones de sesión */
+.InicioSesion {
+  color: var(--color-primary);
+  transition: color 0.3s ease;
+}
+
+.InicioSesion:hover {
+  color: var(--color-primary-hover);
+}
+
+.Registro {
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-xl);
+  color: var(--text-light);
+  transition: background-color 0.3s ease;
+}
+
+.Registro:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* Contenido principal */
+.Contenido {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: 2% 5%;
+  min-height: 85vh;
+}
+
+.Texto {
+  flex: 1;
+  display: flex;
+  font-weight: var(--font-weight-normal);
+  padding: var(--spacing-lg);
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.Texto p {
+  text-align: justify;
+  font-size: var(--font-size-large);
+  line-height: var(--line-height);
+  margin-bottom: var(--spacing-lg);
+  color: var(--text-gray);
+}
+
+span {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.Empieza-ahora {
+  padding: var(--spacing-xs) var(--spacing-xl);
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius-md);
+  color: var(--color-aliceblue);
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-bold);
+  transition: background-color 0.3s ease;
+  display: inline-block;
+}
+
+.Empieza-ahora:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* Imagen */
+.ImagenLP {
+  flex: 1;
+  padding: var(--spacing-lg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ImagenLP img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}

@@ -15,7 +15,7 @@ export const LandingPage = ({children}: DefaultLayoutProps) => {
           <img className='logoimg' src={img} width="50" height="80" alt='logo'/><Link to="/" className='TextLogo'>EcoTips</Link>
         </div>
           <ul>
-            <li><Link to="/login" className='InicioSesion'>Iniciar Sesión</Link></li>
+            <li><Link to="/login" className='InicioSesion'>Iniciar sesión</Link></li>
             <li><Link to="/signup" className='Registro'>Registrarse</Link> </li>
           </ul>
       </nav>
@@ -23,8 +23,8 @@ export const LandingPage = ({children}: DefaultLayoutProps) => {
       <section>
         <div className='Contenido'>
           <div className='Texto'>
-            <p>
-            EcoTips es una innovadora <span> plataforma de reciclaje inteligente </span>  diseñada para fomentar la 
+           <p>
+            EcoTips es una innovadora <span>plataforma de reciclaje inteligente</span> diseñada para fomentar la 
             conciencia ambiental y el compromiso con el cuidado del planeta. Su principal objetivo es brindar a los usuarios un 
             espacio interactivo donde puedan compartir, consultar y acceder fácilmente a información práctica y confiable sobre reciclaje.
             </p>
@@ -33,7 +33,7 @@ export const LandingPage = ({children}: DefaultLayoutProps) => {
             A través de esta plataforma, se busca promover hábitos sostenibles en la vida diaria, educando sobre la correcta clasificación de residuos, 
             el aprovechamiento de materiales reciclables y la reducción del impacto ambiental. Además, EcoTips permite a la comunidad contribuir con consejos, 
             experiencias y buenas prácticas, creando así una red colaborativa de aprendizaje y acción ecológica.
-            </p>      
+            </p>        
             <button className='Empieza-ahora'> Empieza ahora</button> 
           </div>
           <div className='ImagenLP'><img src={img} alt='imagen'/> </div>

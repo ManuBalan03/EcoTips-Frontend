@@ -1,4 +1,4 @@
-import '../pages/LandingPage.css';
+import '../../routes/LandingPage/LandingPage.css';
 import { Link } from "react-router-dom";
 import img from "../../assets/img1.png";
 

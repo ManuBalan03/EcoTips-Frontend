@@ -158,7 +158,7 @@ const ModificationDetail: React.FC<ModificationDetailProps> = ({ publicacionId, 
               <strong>Veredicto:</strong> 
               <p>
               <span className={`veredicto ${evaluacion.veredicto?.toLowerCase()}`}>
-                {evaluacion.veredicto}
+                MODIFICACIÓN
               </span>
             </p>
             </div>

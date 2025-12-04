@@ -115,7 +115,8 @@ const NotificationsPanel: React.FC = () => {
     if (!user?.idUsuario || !token) return;
 
      const estado = await obtenerEstadoPublicacion(notificacion.idPublicacion!, token);
-if (notificacion.tipo === 'Publicacion Modificaciones' && notificacion.idPublicacion  &&  estado==='MODIFICACION') {
+
+if (notificacion.tipo === 'Publicación modificaciones' && notificacion.idPublicacion  &&  estado==='MODIFICACION') {
   setSelectedModificacion(notificacion.idPublicacion);
   setModificacionView('detail');
   return;

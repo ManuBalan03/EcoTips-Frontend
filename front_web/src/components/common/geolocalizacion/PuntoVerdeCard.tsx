@@ -26,9 +26,9 @@ const PuntoVerdeCard: React.FC<PuntoVerdeCardProps > =({punto})=> {
             <img alt="imagen punto verde" src={punto.imagen_url}/>
         </div>
         <div className="punto-information">
-            <span> <b>Descripcion: </b>{punto.descripcion}</span>
-            <span> <b>Direccion: </b>{punto.direccion}</span>
-            <span> <b>Categoria: </b>{punto.tipo_residuo}</span>
+            <span> <b>Descripción: </b>{punto.descripcion}</span>
+            <span> <b>Dirección: </b>{punto.direccion}</span>
+            <span> <b>Categoría: </b>{punto.tipo_residuo}</span>
         </div>
         
     </div>

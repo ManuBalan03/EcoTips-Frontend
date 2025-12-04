@@ -7,12 +7,13 @@ import { UserPointsProvider } from './context/UserPointsContext';
 import Login from './routes/Login';
 import Signup from './routes/Signup';
 import Home from './routes/Home/Home';
-import Notifications from './routes/Home/Home2';
-import LandingPage from './components/pages/LandingPage';
+// import Notifications from './routes/Home/Home2';
+import LandingPage from './routes/LandingPage/LandingPage';
 import NotificationsPanel from './routes/Home/NotificationsSection';
 import PerfilSection from './routes/Home/PerfilSection/PerfilSection';
 import RootLayout from './components/layout/RootLayout';
 import PuntoVerdeSection from './routes/Home/PuntoVerdeSection';
+
 
 const router = createBrowserRouter([
   {
@@ -35,10 +36,10 @@ const router = createBrowserRouter([
         path: "/Home",
         element: <Home />, // Home NO incluye NavMainLayout
       },
-      {
-        path: "/notifications",
-        element: <Notifications />,
-      },
+      // {
+      //   path: "/notifications",
+      //   element: <Notifications />,
+      // },
       {
         path: "/notificaciones",
         element: <NotificationsPanel />,
