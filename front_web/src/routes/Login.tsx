@@ -34,7 +34,7 @@ function Login() {
     });
     
     login(response.user, response.token);
-    navigate("/Home");
+    navigate("/ ");
   } catch (error: any) {
     // Mensaje más específico basado en el tipo de error
     if (error.message.includes('Credenciales inválidas')) {

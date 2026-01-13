@@ -1,0 +1,81 @@
+// api/AuthContext.tsx
+import { createContext, useContext, useState, type ReactNode, useEffect } from 'react';
+import type { UsuarioDTO } from './types/UserTypes';
+
+interface AuthContextType {
+  isAuthenticated: boolean;
+  user: UsuarioDTO | null;
+  token: string | null;
+  login: (user: UsuarioDTO, token: string) => void;
+  logout: () => void;
+    updateUser: (newUser: UsuarioDTO) => void;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  // Intenta obtener el usuario y token almacenados al cargar la aplicación
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [user, setUser] = useState<UsuarioDTO | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!token);
+
+  // Cargar el usuario desde localStorage al iniciar
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        console.error("Error al parsear el usuario del localStorage:", e);
+        localStorage.removeItem('user');
+      }
+    }
+  }, []);
+const updateUser = (newUser: UsuarioDTO) => {
+  setUser(newUser);
+  localStorage.setItem('user', JSON.stringify(newUser));
+};
+
+  const login = (userData: UsuarioDTO, newToken: string) => {
+    setUser(userData);
+    setToken(newToken);
+    setIsAuthenticated(true);
+    
+    localStorage.setItem('token', newToken);
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+
+  const logout = () => {
+    setUser(null);
+    setToken(null);
+    setIsAuthenticated(false);
+    
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  };
+
+  return (
+    <AuthContext.Provider value={{
+      isAuthenticated,
+      user,
+      token,
+      login,
+      logout,
+      updateUser
+    }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth debe ser usado dentro de un AuthProvider');
+  }
+  return context;
+};

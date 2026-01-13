@@ -24,6 +24,8 @@ export const LandingPage = ({children}: DefaultLayoutProps) => {
         <div className='Contenido'>
           <div className='Texto'>
            <p>
+
+            
             EcoTips es una innovadora <span>plataforma de reciclaje inteligente</span> diseñada para fomentar la 
             conciencia ambiental y el compromiso con el cuidado del planeta. Su principal objetivo es brindar a los usuarios un 
             espacio interactivo donde puedan compartir, consultar y acceder fácilmente a información práctica y confiable sobre reciclaje.
