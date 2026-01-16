@@ -1693,8 +1693,8 @@ const renderEditForm = () => (
 
 
   return (
-    <Drawer direction={isMobile ? "bottom" : "right"}>
-      <DrawerTrigger asChild>
+    <Drawer  direction={isMobile ? "bottom" : "right"}>
+      <DrawerTrigger  asChild>
         <Button 
           variant="link" 
           className="text-foreground hover:text-primary w-fit px-0 text-left hover:underline transition-colors"
@@ -1720,7 +1720,7 @@ const renderEditForm = () => (
         </Button>
       </DrawerTrigger>
       
-      <DrawerContent className="max-h-[90vh]">
+      <DrawerContent className="max-h-[90vh]  bg-gray-500">
         <DrawerHeader className="border-b px-6 py-4">
           <div className="flex items-start justify-between">
             <div className="flex-1">

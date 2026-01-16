@@ -10,6 +10,8 @@ interface Props {
 const EcoTipCard = ({ tip, user, onDelete, onEdit }: Props) => {
   const isAuthor = tip.idUsuario === user?.id;
 
+  console.log(tip.url_key)
+
   // Funciones adaptadoras para los eventos
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
