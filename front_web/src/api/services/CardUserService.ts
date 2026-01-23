@@ -12,7 +12,7 @@ export const authService = {
           nombre: response.data.user.nombre,
           email: response.data.user.email,
           puntos_totales: response.data.user.puntos_totales || 0,
-          foto_perfil: response.data.user.foto_perfil || "default.jpg",
+          urlkey: response.data.user.foto_perfil || "default.jpg",
           nivel: response.data.user.nivel
         }
       };

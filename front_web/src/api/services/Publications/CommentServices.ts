@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ComentarioDTO, ComentarioCreateDTO, PaginatedResponse } from './Types/PublicationType';
 
-const BASE_URL = 'http://localhost:8082/api/publicaciones/comentarios';
+const BASE_URL = 'http://44.221.204.90:8082/api/publicaciones/comentarios';
 
 /**
  * Obtiene todos los comentarios de una publicación (sin paginación)

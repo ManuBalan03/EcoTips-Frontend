@@ -35,16 +35,7 @@ const UserPublicationsSection: React.FC = () => {
     }
   }, [isAuthenticated, user, token]);
 
-  // ⚙️ Handlers (si los necesitas)
-  const onDeletePublication = (id: number) => {
-    setPublicaciones(prev => prev.filter(pub => pub.id !== id));
-  };
 
-  const onEditPublication = (updatedPub: PublicacionDTO) => {
-    setPublicaciones(prev =>
-      prev.map(pub => (pub.id === updatedPub.id ? updatedPub : pub))
-    );
-  };
 
   // 🖥️ Renderizado
   if (loading) return <p className="loanding-publications">Cargando publicaciones...</p>;

@@ -29,10 +29,11 @@ interface DetailsPublicationProps {
 const DetailsPublication: React.FC<DetailsPublicationProps> = ({ publicacionId, onBack, modoEdicion = false }) => {
   const { token } = useAuth();
   const [publicacion, setPublicacion] = useState<PublicacionDTO | null>(null);
-  const [comentarios, setComentarios] = useState<ComentarioDTO[]>([]);
-  const [reacciones, setReacciones] = useState<{ [tipo: string]: number }>({});
+  const [, setComentarios] = useState<ComentarioDTO[]>([]);
+  const [, setReacciones] = useState<{ [tipo: string]: number }>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
 
   // Cargar datos de la publicación
   useEffect(() => {

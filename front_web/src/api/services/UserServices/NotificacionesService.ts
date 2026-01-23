@@ -1,7 +1,7 @@
 // services/NotificacionesService.ts
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8080/api/notificaciones';
+const BASE_URL = 'http://44.221.204.90:8080/api/notificaciones';
 
 export interface NotificationsDTO {
   idNotificacion?: number;

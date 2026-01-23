@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {PublicacionDTO } from './Types/PublicationType';
 
-const BASE_URL = 'http://localhost:8082/api/publicaciones';
+const BASE_URL = 'http://44.221.204.90:8082/api/publicaciones';
 
 export const crearPublicacion = async (
   publicacion: PublicacionDTO,
@@ -21,7 +21,7 @@ export const obtenerTodasLasPublicaciones = async (
   token: string, 
   estado: string = 'APROBADA', 
   page: number = 0, 
-  size: number = 20
+  size: number = 5
 ): Promise<any> => {
   try {
     const response = await axios.get(BASE_URL, {
@@ -36,7 +36,7 @@ export const obtenerTodasLasPublicaciones = async (
         'Content-Type': 'application/json'
       }
     });
-    
+
     if (response.data && typeof response.data === 'object') {
       return response.data;
     }

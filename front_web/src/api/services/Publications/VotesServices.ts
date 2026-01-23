@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8082/api/publicaciones';
+const BASE_URL = 'http://44.221.204.90:8082/api/publicaciones';
 import {PublicacionDTO } from './Types/PublicationType';
 
 export interface VotosDTO {

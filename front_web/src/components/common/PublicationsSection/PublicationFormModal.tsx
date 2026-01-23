@@ -11,34 +11,13 @@ interface Props {
 const EcoTipFormModal = ({ onClose, onPublish, user }: Props) => {
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const [Url_key, setContenido] = useState("");
+  const [Url_key] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>("");
-  const [isUploading, setIsUploading] = useState(false);
+  const [] = useState<string>("");
+  const [, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false); // 👈 Nuevo estado
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const submitInProgress = useRef(false); // 👈 Referencia para prevenir doble submit
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/quicktime'];
-    if (!validTypes.includes(file.type)) {
-      alert('Por favor, selecciona una imagen (JPEG, PNG, GIF, WebP) o video (MP4, MOV)');
-      return;
-    }
-
-    if (file.size > 10 * 1024 * 1024) {
-      alert('El archivo es demasiado grande. Máximo 10MB permitido.');
-      return;
-    }
-
-    setSelectedFile(file);
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewUrl(objectUrl);
-    setContenido(file.name);
-  };
 
   const handleSubmit = async () => {
     // 👇 PREVENCIÓN DE DOBLE SUBMIT
@@ -80,33 +59,9 @@ const EcoTipFormModal = ({ onClose, onPublish, user }: Props) => {
   };
 
   // ... resto del código igual
-  const handleRemoveFile = () => {
-    setSelectedFile(null);
-    setPreviewUrl("");
-    setContenido("");
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    const files = e.dataTransfer.files;
-    if (files && files.length > 0) {
-      const file = files[0];
-      const event = {
-        target: { files: [file] }
-      } as unknown as React.ChangeEvent<HTMLInputElement>;
-      handleFileSelect(event);
-    }
-  };
+
 
   return (
     <div className="modal-overlay">

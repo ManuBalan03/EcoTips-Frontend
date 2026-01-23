@@ -3,7 +3,7 @@ import {PuntoVerdeDTO} from '../../types/CordenadasType';
 import { CoordenadasDTO } from '../../types/CordenadasType';
 
 
-const BASE_URL = 'http://localhost:8080/api/PuntoVerde';
+const BASE_URL = 'http://44.221.204.90:8080/api/PuntoVerde';
 // const username = 'admin';
 // const password = 'holabola';
 

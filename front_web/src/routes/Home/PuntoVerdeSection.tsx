@@ -1,6 +1,5 @@
 // routes/Home/Home.tsx
 import { useAuth } from "../../api/AuthContext";
-import UserCard from "../../components/home/userinfo";
 import Geolocalization from "../../components/common/GeolocalizationSection/Geolocalization";
 import "./PuntoVerde.css";
 function PuntoVerdeSection() {

@@ -26,6 +26,8 @@ const SolicitudDetail: React.FC<SolicitudDetailProps> = ({ solicitudId, onBack }
   const [error, setError] = useState<string | null>(null);
   const [votoEnviado, setVotoEnviado] = useState(false); // Nuevo estado para controlar redirección
 
+
+
   useEffect(() => {
     const cargarDetalles = async () => {
       if (!token) return;
@@ -69,7 +71,7 @@ const SolicitudDetail: React.FC<SolicitudDetailProps> = ({ solicitudId, onBack }
         Comentario: comentario,
         idUsuario: user.idUsuario,
         idPublicacion: solicitudId,
-        nombreAutor: user.nombre,
+        nombreAutor: publicacion?.nombreAutor,
         fotoPerfil: user.fotoPerfil
       };
 
@@ -138,15 +140,18 @@ const SolicitudDetail: React.FC<SolicitudDetailProps> = ({ solicitudId, onBack }
       </button>
       
       <div className="solicitud-header">
-        <div className="solicitud-avatar">
-          {publicacion ? (
-            <img src={publicacion.fotoPerfil} alt={publicacion.nombreAutor || 'Autor'} />
-          ) : (
-            <div className="avatar-initial">
-              {obtenerIniciales(publicacion.nombreAutor)}
-            </div>
-          )}
+         <div className="solicitud-avatar">
+      {publicacion.fotoPerfil ? (
+        <img 
+          src={publicacion.fotoPerfil} 
+          alt={publicacion.nombreAutor || 'Autor'} 
+        />
+      ) : (
+        <div className="avatar-initial">
+          {obtenerIniciales(publicacion.nombreAutor)}
         </div>
+      )}
+    </div>
         <div className="solicitud-meta">
           <h2>{publicacion.titulo}</h2>
           <p className="solicitud-author">{publicacion.nombreAutor || 'Usuario'}</p>

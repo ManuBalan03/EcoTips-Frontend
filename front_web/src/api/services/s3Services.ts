@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {UrlPerfil} from '../types/UserTypes'
-const BASE_URL = 'http://localhost:8082';
+const BASE_URL = 'http://44.221.204.90 :8082';
 
 export const uploadImageToS3 = async (file: File, token: string): Promise<string> => {
   // Generar key única (por ejemplo por usuario + timestamp)

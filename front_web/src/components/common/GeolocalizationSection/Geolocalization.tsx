@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import Narvbar from '../../layout/NavMainLayout';
+import { useEffect, useState } from 'react'
 import PuntoVerdeCard from '../geolocalizacion/PuntoVerdeCard';
 import './Geolocalization.css';
 import MapCard from '../geolocalizacion/MapCard';
@@ -13,7 +12,7 @@ import { useAuth } from '../../../api/AuthContext';
 
 const Geolocalization = () => {
   const { token } = useAuth();
-  const { locationInfo, isLoading, locationError } = useUbication();
+  const { locationInfo, isLoading } = useUbication();
   const [puntoSeleccionado, setPuntoSeleccionado] = useState<PuntoVerdeDTO | null>(null);
   const [puntos, setPuntos]  = useState<PuntoVerdeDTO[]>([]);
   const [activeFormulario, setActiveFormulario] = useState(false);

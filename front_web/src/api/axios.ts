@@ -54,11 +54,13 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse) => {
     const requestKey = generateRequestKey(response.config);
+    console.log(requestKey)
     console.log(`✅ API Success: ${response.config.url} ${response.status}`);
     return response;
   },
   (error) => {
     const requestKey = generateRequestKey(error.config);
+    console.log(requestKey)
     console.error(`❌ API Error: ${error.config?.url}`, error.response?.status || error.message);
     return Promise.reject(error);
   }

@@ -1,0 +1,18 @@
+# frontend/web/Dockerfile.dev y frontend/panel/Dockerfile.dev
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copiar package.json
+COPY package*.json ./
+
+# Instalar dependencias
+RUN npm install
+
+# Copiar todo el código
+COPY . .
+
+# Exponer puerto de desarrollo
+EXPOSE 5173
+
+# No usar CMD aquí, lo definimos en docker-compose

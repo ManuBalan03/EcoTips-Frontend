@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect} from 'react'
 import { MapContainer, TileLayer, useMap } from "react-leaflet"; 
 import { useUbication } from '../../../api/hooks/Geo/useUbication';
 import { Marker, Popup } from 'react-leaflet';
 import { IconLocation } from './IconLocation';
-import { getPuntosVerde, puntoVerdeMasCercano } from '../../../api/services/UserServices/PuntosVerdeService';
 import { PuntoVerdeDTO } from '../../../api/types/CordenadasType';
 import "leaflet/dist/leaflet.css";
 
@@ -15,7 +14,7 @@ interface MapCardProps {
 }
 
 const MapCard: React.FC<MapCardProps> = ({ puntos, onMarkerClick }) => {
-  const { locationInfo, locationError, isLoading } = useUbication();
+  const { locationInfo,  isLoading } = useUbication();
 
   const ChangeMapView = ({ coords }: { coords: [number, number] }) => {
     const map = useMap();
@@ -28,7 +27,7 @@ const MapCard: React.FC<MapCardProps> = ({ puntos, onMarkerClick }) => {
   const descripcion = "Un centro de reciclaje ubicado en una zona urbana que recibe y procesa residuos reciclables. Su objetivo es reducir la contaminación y promover la reutilización de materiales";
 
   if (isLoading) {
-    return <div>Cargando ubicación...</div>;  
+    return <div>Cargando ubicación...</div>;
   }
   
   return (

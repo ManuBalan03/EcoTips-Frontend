@@ -44,6 +44,7 @@ const EcoTipsPage = () => {
       }
 
       const respuesta = await crearPublicacion(nuevo, token);
+      console.log(respuesta)
       setShowModal(false);
     } catch (error) {
       console.error("Error publicando tip:", error);

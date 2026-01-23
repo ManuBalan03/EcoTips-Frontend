@@ -69,6 +69,7 @@ const SolicitudesList: React.FC<SolicitudesListProps> = ({ onSelectSolicitud }) 
                 onClick={() => onSelectSolicitud(solicitud.id)}
               >
                 <div className="user-info-container">
+                  
                   <div className="avatar-container">
                     {solicitud.fotoPerfil ? (
                       <img src={solicitud.fotoPerfil} alt={solicitud.nombreAutor || 'Usuario'} />
@@ -88,12 +89,6 @@ const SolicitudesList: React.FC<SolicitudesListProps> = ({ onSelectSolicitud }) 
                   <h3>{solicitud.titulo}</h3>
                   <p>{solicitud.descripcion || 'Sin descripción'}</p>
                 </div>
-
-                {solicitud.estado && (
-                  <div className={`solicitud-status ${solicitud.estado.toLowerCase()}`}>
-                    {solicitud.estado}
-                  </div>
-                )}
               </div>
             );
           })

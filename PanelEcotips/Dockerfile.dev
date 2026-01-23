@@ -1,0 +1,18 @@
+# EcoTips-Frontend/PanelEcotips/Dockerfile
+FROM node:20-alpine  
+
+WORKDIR /app
+
+# Copiar package.json
+COPY package*.json ./
+
+# Instalar dependencias
+RUN npm install
+
+# Copiar todo
+COPY . .
+
+EXPOSE 5174
+
+# Comando para desarrollo
+CMD ["npm", "run", "dev", "--", "--host", "--port", "5174"]

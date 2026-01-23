@@ -1,8 +1,8 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import '../geolocalizacion/FormularioAgregar.css'
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { PuntoVerdeDTO } from '../../../api/types/CordenadasType';
-import { data, FormEncType, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { postPuntoVerde } from '../../../api/services/UserServices/PuntosVerdeService';
 
 type Props = {

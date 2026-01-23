@@ -1,12 +1,11 @@
 
 import '../geolocalizacion/AgregaPunto.css';
-import {  useNavigate } from 'react-router-dom';
 
 type Props = {
   mostrarForm: (value: boolean) => void;
 };
 const AgregarPunto= ({mostrarForm}: Props) => {
-  const navigate = useNavigate();
+  
 
   const handClick = () =>{
   mostrarForm(true);

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { PublicacionDTO } from './Types/PublicationType';
 
-const BASE_URL = 'http://localhost:8082/api/publicaciones';
+const BASE_URL = 'http://44.221.204.90:8082/api/publicaciones';
 
 export const obtenerPublicacionesPorUsuario = async (
   userId: number,
